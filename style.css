@@ -1,0 +1,169 @@
+/* Global */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #050505;
+    color: #ffffff;
+    font-family: Inter, Arial, sans-serif;
+    min-height: 100vh;
+}
+
+/* Layout */
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 50px 40px;
+}
+
+/* Header */
+
+h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #9ca3af;
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+}
+
+/* Search */
+
+.search-wrapper {
+    margin-bottom: 40px;
+}
+
+#search {
+    width: 100%;
+    padding: 22px 28px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.15);
+    background: rgba(255,255,255,.03);
+    color: white;
+    font-size: 1.2rem;
+    backdrop-filter: blur(10px);
+}
+
+#search::placeholder {
+    color: #9ca3af;
+}
+
+#search:focus {
+    outline: none;
+    border-color: rgba(255,255,255,.35);
+}
+
+/* Filter Pills */
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 50px;
+}
+
+.filter-btn {
+    padding: 12px 24px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.15);
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.filter-btn:hover {
+    background: rgba(255,255,255,.08);
+}
+
+.filter-btn.active {
+    background: white;
+    color: black;
+}
+
+/* Results */
+
+#results {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Menu Card */
+
+.menu-item {
+    padding: 30px 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.menu-item h3 {
+    font-size: 2rem;
+    margin-bottom: 12px;
+}
+
+.menu-item p {
+    color: #c5c5c5;
+    line-height: 1.6;
+}
+
+/* Lifestyle Badge */
+
+.badge {
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.badge.vegan {
+    color: #7CFF65;
+    border: 1px solid rgba(124,255,101,.4);
+}
+
+.badge.vegetarian {
+    color: #9EFF6A;
+    border: 1px solid rgba(158,255,106,.4);
+}
+
+.badge.gluten-free {
+    color: #FFD54A;
+    border: 1px solid rgba(255,213,74,.4);
+}
+
+.badge.dairy-free {
+    color: #6CCBFF;
+    border: 1px solid rgba(108,203,255,.4);
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .container {
+        padding: 30px 20px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    #search {
+        font-size: 1rem;
+    }
+
+    .menu-item h3 {
+        font-size: 1.5rem;
+    }
+}
