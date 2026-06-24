@@ -2,7 +2,7 @@ fetch('data.json')
   .then(response => response.json())
   .then(data => {
 
-    const menuData = data.body;
+    const menuData = data;
 
     const searchInput = document.getElementById('search');
     const results = document.getElementById('results');
@@ -16,15 +16,14 @@ fetch('data.json')
 
       results.innerHTML = items.map(item => `
         <div class="menu-item">
-          <h3>${item.name || ''}</h3>
-          <p>${item.description || ''}</p>
-          <p><strong>Lifestyle:</strong> ${item.lifestyle || 'None Listed'}</p>
-          <p><strong>Allergens:</strong> ${item.allergens || 'None Listed'}</p>
+          <h3>${item.Title || ''}</h3>
+          <p>${item.MenuDescription || ''}</p>
+          <p><strong>Lifestyle:</strong> ${item.Lifestyle || 'None Listed'}</p>
+          <p><strong>Allergens:</strong> ${item.The9Allergens || 'None Listed'}</p>
         </div>
       `).join('');
     }
 
-    // Display all menu items on page load
     display(menuData);
 
     searchInput.addEventListener('input', () => {
@@ -32,10 +31,10 @@ fetch('data.json')
       const term = searchInput.value.toLowerCase().trim();
 
       const filtered = menuData.filter(item =>
-        (item.name || '').toLowerCase().includes(term) ||
-        (item.description || '').toLowerCase().includes(term) ||
-        (item.lifestyle || '').toLowerCase().includes(term) ||
-        (item.allergens || '').toLowerCase().includes(term)
+        (item.Title || '').toLowerCase().includes(term) ||
+        (item.MenuDescription || '').toLowerCase().includes(term) ||
+        (item.Lifestyle || '').toLowerCase().includes(term) ||
+        (item.The9Allergens || '').toLowerCase().includes(term)
       );
 
       display(filtered);
