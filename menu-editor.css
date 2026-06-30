@@ -1,0 +1,604 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:Inter, sans-serif;
+
+    background:#0f0f10;
+
+    color:white;
+
+    height:100vh;
+
+    overflow:hidden;
+
+}
+
+/* ===========================
+   MAIN LAYOUT
+=========================== */
+
+.editor{
+
+    display:grid;
+
+    grid-template-columns:320px 1fr;
+
+    height:100vh;
+
+}
+
+/* ===========================
+   SIDEBAR
+=========================== */
+
+.sidebar{
+
+    background:#171717;
+
+    border-right:1px solid #2d2d2d;
+
+    padding:30px;
+
+    overflow-y:auto;
+
+}
+
+.sidebar h2{
+
+    font-size:30px;
+
+    margin-bottom:18px;
+
+}
+
+.sidebar h2 i{
+
+    color:#4da3ff;
+
+}
+
+.sidebar-subtitle{
+
+    color:#9ca3af;
+
+    line-height:1.6;
+
+    margin-bottom:30px;
+
+    font-size:15px;
+
+}
+
+#cardList{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+/* ===========================
+   WORKSPACE
+=========================== */
+
+.workspace{
+
+    display:flex;
+
+    flex-direction:column;
+
+    min-height:0;
+
+}
+
+.workspace-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:30px 40px;
+
+    border-bottom:1px solid #2d2d2d;
+
+}
+
+.workspace-header h1{
+
+    font-size:38px;
+
+}
+
+/* ===========================
+   BODY
+=========================== */
+
+.workspace-body{
+
+    flex:1;
+
+    display:grid;
+
+    grid-template-columns:420px 1fr;
+
+    gap:35px;
+
+    padding:35px;
+
+    min-height:0;
+
+    overflow:hidden;
+
+}
+
+/* ===========================
+   PANELS
+=========================== */
+
+.editor-panel{
+
+    background:#171717;
+
+    border:1px solid #2d2d2d;
+
+    border-radius:18px;
+
+    padding:28px;
+
+    overflow-y:auto;
+
+    height:100%;
+
+}
+
+.editor-panel h3{
+
+    margin-bottom:24px;
+
+    font-size:22px;
+
+}
+
+/* ===========================
+   FORM
+=========================== */
+
+label{
+
+    display:block;
+
+    margin-bottom:28px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+}
+
+input,
+textarea{
+
+    width:100%;
+
+    margin-top:8px;
+
+    background:#0f0f10;
+
+    color:white;
+
+    border:1px solid #3a3a3a;
+
+    border-radius:12px;
+
+    padding:14px;
+
+    font-family:inherit;
+
+    font-size:15px;
+
+}
+
+textarea{
+
+    height:130px;
+
+    resize:none;
+
+}
+
+/* ===========================
+   BUTTON
+=========================== */
+
+#downloadPdf{
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:14px 24px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+}
+
+#downloadPdf:hover{
+
+    background:#1d4ed8;
+
+}
+
+/* ===========================
+   PREVIEW
+=========================== */
+
+#previewCard{
+
+    width:340px;
+
+    height:440px;
+
+    margin:auto;
+
+    background:white;
+
+    border:2px solid #005A8D;
+
+    border-radius:4px;
+
+}
+
+.menu-card-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:14px 16px;
+
+    margin-bottom:8px;
+
+    border-radius:12px;
+
+    background:#202020;
+
+    border:1px solid transparent;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.menu-card-item:hover{
+
+    background:#2a2a2a;
+
+    border-color:#3b82f6;
+
+}
+
+.menu-card-item i{
+
+    color:#60a5fa;
+
+}
+
+/* ===========================
+   ACTIVE SIDEBAR ITEM
+=========================== */
+
+/* ===========================
+   SIDEBAR MENU ITEMS
+=========================== */
+
+.menu-card-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:14px 16px;
+
+    margin-bottom:8px;
+
+    border-radius:12px;
+
+    background:#202020;
+
+    border:1px solid transparent;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.menu-card-item:hover{
+
+    background:#2a2a2a;
+
+    border-color:#3b82f6;
+
+}
+
+.menu-card-item i{
+
+    color:#60a5fa;
+
+}
+
+/* ===========================
+   ACTIVE SIDEBAR ITEM
+=========================== */
+
+.menu-card-item.active{
+
+    background:#2563eb;
+
+    color:white;
+
+    border-color:#60a5fa;
+
+    box-shadow:0 0 0 2px rgba(96,165,250,.35);
+
+}
+
+/* ===========================
+   LIVE PREVIEW
+=========================== */
+
+#previewCard{
+
+    width:4.05in;
+
+    height:5.40in;
+
+    background:white;
+
+    border:2px solid #005A8D;
+
+    display:grid;
+
+    grid-template-rows:calc(50% - 1px) 2px calc(50% - 1px);
+
+}
+
+.preview-top{
+
+    width:100%;
+
+}
+
+.preview-fold{
+
+    border-top:2px dashed #2b6cb0;
+
+}
+
+.preview-bottom{
+
+    padding:28px 20px 20px;
+
+    color:#000;
+
+    overflow:hidden;
+
+}
+
+.preview-bottom h2{
+
+    font-size:24px;
+
+    margin-bottom:12px;
+
+    font-family:Helvetica,Arial,sans-serif;
+
+}
+
+.preview-bottom p{
+
+    font-size:13px;
+
+    line-height:1.4;
+
+    font-family:Helvetica,Arial,sans-serif;
+
+}
+
+.preview-title{
+
+    font-size:26px;
+
+    font-weight:700;
+
+    line-height:1.08;
+
+    margin-bottom:8px;
+
+}
+
+.preview-description{
+
+    font-size:13px;
+
+    line-height:1.3;
+
+    color:#222;
+
+    margin-bottom:12px;
+
+    overflow-wrap: break-word;
+
+    word-break: break-word;
+
+}
+
+.preview-description.small{
+
+    font-size:11px;
+
+    line-height:1.2;
+
+}
+
+.preview-heading{
+
+    margin-top:10px;
+
+    margin-bottom:5px;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    color:#666;
+
+}
+
+.preview-list{
+
+    font-size:13px;
+
+    line-height:1.7;
+
+    color:#000;
+
+}
+
+.preview-divider{
+
+    height:1px;
+
+    background:#ddd;
+
+    margin: 10px 0;
+
+}
+
+.preview-badges{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+}
+
+.preview-badge{
+
+    font-size:13px;
+
+    color:#000;
+
+}
+
+/* ===========================
+   CHECKBOXES
+=========================== */
+
+.checkbox-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+
+}
+
+.checkbox-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:4px 0;
+
+    font-size:15px;
+
+}
+
+.checkbox-item input{
+
+    width:18px;
+
+    height:18px;
+
+}
+
+/* ===========================
+   SCROLLABLE ALLERGENS
+=========================== */
+
+.allergen-container{
+
+    margin-top:12px;
+
+    max-height:260px;
+
+    overflow-y:auto;
+
+    border:1px solid #303030;
+
+    border-radius:12px;
+
+    background:#111;
+
+    padding:14px;
+
+}
+
+.allergen-container::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+.allergen-container::-webkit-scrollbar-thumb{
+
+    background:#444;
+
+    border-radius:10px;
+
+}
+
+.allergen-container::-webkit-scrollbar-thumb:hover{
+
+    background:#666;
+
+}
+
+.section-title{
+
+    margin-top:36px;
+
+    margin-bottom:18px;
+
+    font-size:18px;
+
+}

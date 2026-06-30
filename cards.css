@@ -1,0 +1,310 @@
+@page {
+    size: letter;
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+    padding: 0;
+
+    background: white;
+
+    font-family: Helvetica, Arial, sans-serif;
+
+}
+
+#cardContainer {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 4.05in);
+    grid-auto-rows: 5.40in;
+
+    row-gap: .08in;
+column-gap: .10in;
+
+    justify-content: center;
+
+}
+
+/* ===========================
+   CARD
+=========================== */
+
+.table-card {
+
+    width: 4.05in;
+    height: 5.40in;
+
+    background: white;
+
+    border: 2px solid #005A8D;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+}
+
+/* ===========================
+   BLANK TOP HALF
+=========================== */
+
+.top-half {
+
+    flex: 1;
+
+}
+
+/* ===========================
+   FOLD LINE
+=========================== */
+
+.fold-line {
+
+    border-top: 2px dashed #2b6cb0;
+
+}
+
+/* ===========================
+   BOTTOM HALF
+=========================== */
+
+.bottom-half {
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: flex-start;
+
+    padding: 20px 22px;
+
+    overflow: hidden;
+
+}
+
+/* ===========================
+   TITLE
+=========================== */
+
+.card-title {
+
+    margin: 0 0 10px;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    line-height: 1.1;
+
+}
+
+/* ===========================
+   DESCRIPTION
+=========================== */
+
+.card-description {
+
+    margin: 0 0 14px;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+
+    color: #222;
+
+}
+
+/* ===========================
+   SECTION HEADERS
+=========================== */
+
+.section-title {
+
+    margin-top: 12px;
+    margin-bottom: 6px;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    color: #555;
+
+}
+
+/* ===========================
+   DIVIDER
+=========================== */
+
+.section-divider {
+
+    height: 1px;
+
+    background: #dddddd;
+
+    margin: 14px 0;
+
+}
+
+/* ===========================
+   BADGES
+=========================== */
+
+.badges {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+}
+
+.badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 10px;
+
+    border-radius: 16px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+}
+
+/* Lifestyle */
+
+.vegan {
+
+    background: #DCFCE7;
+
+}
+
+.vegetarian {
+
+    background: #FEF3C7;
+
+}
+
+.gluten {
+
+    background: #DBEAFE;
+
+}
+
+.dairy {
+
+    background: #F3E8FF;
+
+}
+
+/* Allergens */
+
+.allergen {
+
+    background: #FEE2E2;
+
+}
+
+/* ===========================
+   PRINT
+=========================== */
+
+@media print {
+
+    body {
+
+        margin: 0;
+
+        padding: 0;
+
+        background: white;
+
+    }
+
+    #cardContainer {
+
+        gap: .15in;
+
+    }
+
+}
+
+/* Cards with only a Lifestyle section */
+.bottom-half.lifestyle-only {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+/* Push Lifestyle down slightly */
+.bottom-half.lifestyle-only .section-title {
+
+    margin-top: 30px;
+
+}
+
+/* ===========================
+   SMART CARD SPACING
+=========================== */
+
+/* Cards with ONLY Lifestyle */
+
+.bottom-half.lifestyle-only {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.bottom-half.lifestyle-only .content-top {
+
+    margin-bottom: 28px;
+
+}
+
+/* Cards with ONLY Allergens */
+
+.bottom-half.allergens-only {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.bottom-half.allergens-only .content-top {
+
+    margin-bottom: 28px;
+
+}
+
+.lifestyle-list,
+.allergen-list {
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    color: #333;
+
+    font-weight: 500;
+
+}

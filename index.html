@@ -1,46 +1,174 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-```
-<title>Menu Finder</title>
+    <title>Menu Finder</title>
 
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-```
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 </head>
 
 <body>
 
-```
-<div class="container">
+    <div class="container">
 
-    <h1>Menu Finder</h1>
+        <h1>Menu Finder</h1>
 
-    <p class="subtitle">
-        Discover dishes. Find your fit.
-    </p>
+        <p class="subtitle">
+            Discover dishes. Find your fit.
+        </p>
 
-    <div class="search-wrapper">
-        <input
-            type="text"
-            id="search"
-            placeholder="Search menu items, ingredients, or cuisines..."
-        >
-    </div>
+        <div class="search-wrapper">
 
-    <div id="results"></div>
+            <input
+                type="text"
+                id="search"
+                placeholder="Search menu items, ingredients, cuisines, allergens..."
+            >
+
+        </div>
+
+        <div class="filter-bar">
+
+            <div class="dropdown">
+
+                <button class="dropdown-button" id="dietaryDropdownButton">
+                    Dietary ▼
+                </button>
+
+                <div class="dropdown-content" id="dietaryDropdown">
+
+    <label class="filter-option">
+        <input type="checkbox" value="Vegan">
+        <span class="diet-dot vegan-dot"></span>
+        <span>Vegan</span>
+    </label>
+
+    <label class="filter-option">
+        <input type="checkbox" value="Vegetarian">
+        <span class="diet-dot vegetarian-dot"></span>
+        <span>Vegetarian</span>
+    </label>
+
+    <label class="filter-option">
+        <input type="checkbox" value="GlutenFriendly">
+        <span class="diet-dot gluten-dot"></span>
+        <span>Gluten-Friendly</span>
+    </label>
+
+    <label class="filter-option">
+        <input type="checkbox" value="DairyFriendly">
+        <span class="diet-dot dairy-dot"></span>
+        <span>Dairy-Friendly</span>
+    </label>
 
 </div>
 
-<script src="script.js"></script>
-```
+            </div>
+
+            <div class="dropdown">
+
+                <button class="dropdown-button" id="mealDropdownButton">
+                    Meal Type ▼
+                </button>
+
+                <div class="dropdown-content" id="mealDropdown">
+
+                    <label class="filter-option">
+    <input type="checkbox" value="BreakfastItem">
+    <span class="meal-dot breakfast-dot"></span>
+    <span>Breakfast</span>
+</label>
+
+                    <label class="filter-option">
+                        <input type="checkbox" value="Lunch_x002f_DinnerItem">
+                        <span class="meal-dot lunch-dot"></span>
+                        <span>Lunch / Dinner</span>
+                    </label>
+
+                    <label class="filter-option">
+        <input type="checkbox" value="Horsdoeuvre">
+        <span class="meal-dot hors-dot"></span>
+        <span>Hors d'oeuvre</span>
+    </label>
+
+                    <label class="filter-option">
+        <input type="checkbox" value="DessertItem">
+        <span class="meal-dot dessert-dot"></span>
+        <span>Dessert</span>
+    </label>
+
+                    <label class="filter-option">
+        <input type="checkbox" value="DressingItem">
+        <span class="meal-dot dressing-dot"></span>
+        <span>Dressing / Sauce</span>
+    </label>
+
+                </div>
+
+            </div>
+
+            <div class="dropdown">
+
+    <button class="dropdown-button" id="sortDropdownButton">
+        Sort By ▼
+    </button>
+
+    <div class="dropdown-content" id="sortDropdown">
+
+        <label class="filter-option">
+            <input type="radio" name="sort" value="az" checked>
+            <span>A → Z</span>
+        </label>
+
+        <label class="filter-option">
+            <input type="radio" name="sort" value="za">
+            <span>Z → A</span>
+        </label>
+
+    </div>
+
+</div>
+
+<button id="favoritesToggle">
+
+    <i class="fa-regular fa-heart"></i>
+
+    <span>Favorites</span>
+
+</button>
+
+<button id="clearFilters">
+    Clear Filters
+</button>
+
+        </div>
+
+        <div id="activeFilters"></div>
+
+        <div id="resultCount"></div>
+
+<div id="favoritesBanner"></div>
+
+<div id="results"></div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script src="script.js"></script>
+
+    <script src="pdf.js"></script>
 
 </body>
 

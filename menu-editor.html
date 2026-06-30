@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Menu Card Editor</title>
+
+    <link rel="stylesheet" href="menu-editor.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="editor">
+
+    <aside class="sidebar">
+
+        <h2>
+            <i class="fa-solid fa-layer-group"></i>
+            Menu Cards
+        </h2>
+
+        <p class="sidebar-subtitle">
+            Editing a temporary copy.<br>
+            Your SharePoint menu database will not be modified.
+        </p>
+
+        <div id="cardList"></div>
+
+    </aside>
+
+    <main class="workspace">
+
+        <div class="workspace-header">
+
+            <h1>Menu Card Editor</h1>
+
+            <button id="downloadPdf">
+
+                <i class="fa-solid fa-file-pdf"></i>
+
+                Download PDF
+
+            </button>
+
+        </div>
+
+        <div class="workspace-body">
+
+            <section class="editor-panel">
+
+                <h3>Card Details</h3>
+
+                <label>
+
+                    Menu Title
+
+                    <input
+                        id="titleInput"
+                        type="text">
+
+                </label>
+
+                <label>
+
+                    Description
+
+                    <textarea
+                        id="descriptionInput"></textarea>
+
+                </label>
+
+                <h3 class="section-title">
+    Lifestyle
+</h3>
+
+<div id="lifestyleCheckboxes"></div>
+
+<h3 class="section-title">
+    Allergens
+</h3>
+
+<div class="allergen-container">
+
+    <div id="allergenCheckboxes"></div>
+
+</div>
+
+            </section>
+
+            <section class="preview-panel">
+
+                <h3>Live Preview</h3>
+
+                <div id="previewCard"></div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="menu-editor.js"></script>
+
+</body>
+
+</html>
