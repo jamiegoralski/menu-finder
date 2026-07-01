@@ -1133,9 +1133,8 @@ h1 {
 
 @media (max-width:768px){
 
-    #favoritesBanner{
+    #favoritesBanner.show{
 
-        display:flex;
         flex-direction:column;
         align-items:stretch;
         gap:24px;
@@ -1144,20 +1143,14 @@ h1 {
     }
 
     .favorites-divider{
-
         display:none;
-
     }
 
     .favorites-actions{
-
         display:grid !important;
         grid-template-columns:1fr !important;
-
         width:100%;
-
         gap:14px;
-
         justify-content:stretch;
     }
 
@@ -1165,10 +1158,8 @@ h1 {
     #generateCardsButton,
     #copyCollectionButton,
     #showAllButton{
-
         width:100%;
         min-width:0;
-
     }
 
 }
