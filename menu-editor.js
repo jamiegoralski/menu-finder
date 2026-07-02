@@ -396,8 +396,6 @@ if (
 
     `;
 
-}
-
 document
     .getElementById("downloadPdf")
     .addEventListener("click", exportPDF);
@@ -481,5 +479,7 @@ document
     }
 
     pdf.save("Menu Cards.pdf");
+
+}
 
 }
