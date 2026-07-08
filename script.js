@@ -3,6 +3,7 @@ fetch('data.json')
 .then(data => {
 
     const menuData = data;
+window.menuData = menuData;
 
     const searchInput = document.getElementById("search");
     const results = document.getElementById("results");

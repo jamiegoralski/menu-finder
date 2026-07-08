@@ -966,15 +966,13 @@ h1 {
 
     display:none;
 
-    justify-content:space-between;
+    width:100%;
 
-    align-items:flex-start;
+    clear:both;
 
-    gap:40px;
+    margin:32px 0 40px;
 
     padding:28px 34px;
-
-    margin:28px 0;
 
     background:#151515;
 
@@ -987,6 +985,12 @@ h1 {
 #favoritesBanner.show{
 
     display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:40px;
 
 }
 
@@ -1162,4 +1166,45 @@ h1 {
         min-width:0;
     }
 
+}
+
+/* ===========================
+   DOWNLOAD PDF BUTTON
+=========================== */
+
+.pdf-btn{
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    height:56px;
+    padding:0 20px;
+
+    background:#171717;
+    color:white;
+
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+
+    font-size:15px;
+    font-weight:600;
+
+    cursor:pointer;
+    transition:.2s;
+
+    flex-shrink:0;
+}
+
+.pdf-button-row{
+    margin-bottom:28px;   /* Creates space before the filters */
+}
+
+.pdf-btn:hover{
+
+    background:#202020;
+    border-color:rgba(255,255,255,.15);
+
+    
 }
