@@ -1,5 +1,13 @@
-const cards =
-    JSON.parse(localStorage.getItem("editorCards")) || [];
+// Check if Buffet Builder sent menu items
+const buffetCards = JSON.parse(sessionStorage.getItem("currentBuffet"));
+console.log("Received buffet:", buffetCards);
+
+const cards = buffetCards
+    ? buffetCards
+    : (JSON.parse(localStorage.getItem("editorCards")) || []);
+
+// Clear it so it only loads once
+sessionStorage.removeItem("currentBuffet");
 
 const cardList =
     document.getElementById("cardList");

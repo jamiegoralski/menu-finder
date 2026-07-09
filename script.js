@@ -853,3 +853,42 @@ if (favoritesOnly) {
     console.error("Menu Data Error:", error);
 
 });
+
+// ===========================
+// Desert Discovery
+// ===========================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const cactusButton = document.getElementById("cactusButton");
+    const popup = document.getElementById("desertPopup");
+    const closePopup = document.getElementById("closePopup");
+    const factText = document.getElementById("factText");
+
+    if (!cactusButton || !popup || !closePopup || !factText) return;
+
+    const facts = [
+        "Phoenix enjoys more than 300 days of sunshine each year.",
+        "The Sonoran Desert is the only place where giant saguaro cacti grow naturally.",
+        "Phoenix is the fifth-largest city in the United States.",
+        "Saguaro cacti can live for over 150 years.",
+        "The Phoenix Convention Center spans more than 900,000 square feet.",
+        "Arizona has more than a dozen official scenic byways.",
+        "Camelback Mountain is one of Phoenix's most recognizable landmarks.",
+        "Phoenix Sky Harbor is one of the busiest airports in America."
+    ];
+
+    cactusButton.addEventListener("click", () => {
+
+        factText.textContent =
+            facts[Math.floor(Math.random() * facts.length)];
+
+        popup.classList.remove("hidden");
+
+    });
+
+    closePopup.addEventListener("click", () => {
+        popup.classList.add("hidden");
+    });
+
+});

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Aventura Menu Studio - Buffet Groups</title>
+
+    <link rel="stylesheet" href="buffet-groups.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+
+        <h1>Buffet Builder</h1>
+
+        <p>Build, organize, and save buffet menus.</p>
+
+    </header>
+
+    <div class="workspace">
+
+        <aside class="panel">
+
+            <h2>Saved Buffets</h2>
+
+            <button id="newBuffet" class="primary-btn">
+    + New Buffet
+</button>
+
+           <div id="buffetList" class="buffet-list">
+
+</div>
+
+        </aside>
+
+        <main class="panel">
+
+    <h2>Current Buffet</h2>
+
+    <input
+        id="buffetName"
+        type="text"
+        placeholder="Buffet Name"
+        class="buffet-name"
+    >
+
+    <div id="currentBuffet" class="current-items">
+
+    </div>
+
+    <button id="saveBuffet" class="save-btn">
+    Save Buffet
+</button>
+
+<button id="generateCards" class="secondary-btn">
+    Generate Menu Cards
+</button>
+
+</main>
+
+                <aside class="panel">
+
+            <h2>Menu Library</h2>
+
+            <input
+                id="menuSearch"
+                type="text"
+                placeholder="Search Menu Items..."
+                class="search"
+            >
+
+            <div id="menuLibrary" class="library">
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+
+<script src="buffet-groups.js"></script>
+
+</body>
+</html>

@@ -36,13 +36,19 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         placeholder="Search menu items, ingredients, cuisines, allergens..."
     >
 
-</div>
+<div class="top-buttons">
 
-<div class="pdf-button-row">
+    <button id="downloadPDF" class="download-btn">
+    <i class="fa-solid fa-file-pdf"></i>
+    Download Complete Menu Catalog
+</button>
 
-    <button id="downloadPDF" class="pdf-btn">
-        <i class="fa-solid fa-file-pdf"></i>
-        Download Complete Menu Catalog
+    <button
+        class="buffet-builder-btn"
+        onclick="window.location.href='buffet-groups.html'">
+
+        Buffet Builder
+
     </button>
 
 </div>
@@ -173,17 +179,25 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- Desert Discovery -->
 
-    <script src="script.js"></script>
-
-    <script src="pdf.js"></script>
-
-    <!-- 🌵 Desert Discovery -->
 <button id="cactusButton" aria-label="Desert Discovery">
     <img src="./cactus.svg" alt="Desert Discovery">
 </button>
 
-</body>
+<div id="desertPopup" class="hidden">
 
+    <button id="closePopup" aria-label="Close">✕</button>
+
+    <h3>Desert Discovery</h3>
+
+    <p id="factText"></p>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="script.js"></script>
+<script src="pdf.js"></script>
+
+</body>
 </html>
