@@ -425,91 +425,78 @@ if (
 
     `;
 
+}
+
 document
     .getElementById("downloadPdf")
     .addEventListener("click", exportPDF);
 
-    async function exportPDF() {
+async function exportPDF() {
+    
+    const previousCard = currentCard;
+const previousIndex = currentIndex;
 
     const { jsPDF } = window.jspdf;
 
     const pdf = new jsPDF({
-
         orientation: "portrait",
-
         unit: "in",
-
         format: "letter"
-
     });
 
     const preview =
         document.getElementById("previewCard");
 
-    const favorites = cards.filter(card => card.favorite);
-
-    const exportCards =
-        favorites.length ? favorites : cards;
+    const exportCards = cards;
 
     const positions = [
 
-    { x: .10, y: .08 },
-    { x: 4.30, y: .08 },
+        { x: .10, y: .08 },
+        { x: 4.30, y: .08 },
 
-    { x: .10, y: 5.58 },
-    { x: 4.30, y: 5.58 }
+        { x: .10, y: 5.58 },
+        { x: 4.30, y: 5.58 }
 
-];
+    ];
 
-    for(let i=0;i<exportCards.length;i++){
+    for(let i = 0; i < exportCards.length; i++){
 
         currentCard = exportCards[i];
 
         updatePreview();
 
-        await new Promise(r=>setTimeout(r,40));
+        await new Promise(r => setTimeout(r,40));
 
         const canvas = await html2canvas(preview,{
-
             scale:2,
-
             backgroundColor:"#ffffff"
-
         });
 
-        const img =
-            canvas.toDataURL("image/png");
+        const img = canvas.toDataURL("image/png");
 
-        const pos =
-            positions[i%4];
+        const pos = positions[i % 4];
 
         pdf.addImage(
-
             img,
-
             "PNG",
-
             pos.x,
-
             pos.y,
-
             4.05,
-
             5.40
-
         );
 
-        if((i+1)%4===0 && i<exportCards.length-1){
-
+        if((i + 1) % 4 === 0 && i < exportCards.length - 1){
             pdf.addPage();
-
         }
 
     }
 
     pdf.save("Menu Cards.pdf");
 
-}
+currentCard = previousCard;
+currentIndex = previousIndex;
+
+updatePreview();
 
 }
 
