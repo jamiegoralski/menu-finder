@@ -721,3 +721,27 @@ header p{
 
 }
 
+/* ===========================
+   MENU LIBRARY HELP TEXT
+=========================== */
+
+.library h3{
+
+    margin-top:4px;
+
+    margin-bottom:12px;
+
+    font-size:1.35rem;
+
+}
+
+.library p{
+
+    margin-bottom:24px;
+
+    line-height:1.6;
+
+    color:#d1d5db;
+
+}
+

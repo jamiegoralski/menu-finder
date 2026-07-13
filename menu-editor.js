@@ -19,6 +19,7 @@ const descriptionInput =
     document.getElementById("descriptionInput");
 
 let currentCard = null;
+let currentIndex = 0;
 
 const lifestyleFields = [
 
@@ -99,6 +100,8 @@ if (cards.length) {
 // ==============================
 
 function loadCard(index) {
+
+    currentIndex = index;
 
     currentCard = cards[index];
 
@@ -489,5 +492,76 @@ document
     pdf.save("Menu Cards.pdf");
 
 }
+
+}
+
+// ==============================
+// Add Blank Card
+// ==============================
+
+document
+    .getElementById("addBlankCard")
+    .addEventListener("click", addBlankCard);
+
+function addBlankCard(){
+
+    const newCard = {
+
+        Title: `New Menu Item ${cards.length + 1}`,
+
+        MenuDescription: "",
+
+        Vegan: false,
+
+        Vegetarian: false,
+
+        GlutenFriendly: false,
+
+        DairyFriendly: false,
+
+        The9Allergens: ""
+
+    };
+
+    cards.unshift(newCard);
+
+    rebuildSidebar();
+
+    loadCard(0);
+
+}
+
+function rebuildSidebar(){
+
+    cardList.innerHTML = "";
+
+    cards.forEach((card,index)=>{
+
+        const item = document.createElement("div");
+
+        item.className = "menu-card-item";
+
+        item.innerHTML = `
+            <i class="fa-solid fa-utensils"></i>
+            <span>${card.Title}</span>
+        `;
+
+        item.addEventListener("click",()=>{
+
+            loadCard(index);
+
+            document
+                .querySelectorAll(".menu-card-item")
+                .forEach(x=>x.classList.remove("active"));
+
+            item.classList.add("active");
+
+        });
+
+        cardList.appendChild(item);
+
+    });
+
+    cardList.firstChild.classList.add("active");
 
 }
