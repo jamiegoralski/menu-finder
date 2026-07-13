@@ -356,6 +356,21 @@ generateCardsButton.addEventListener("click", () => {
 
     console.log("Sending buffet:", buffetItems);
 
+    generateCardsButton.addEventListener("click", () => {
+
+    if (buffetItems.length === 0) {
+
+        alert("Please add at least one menu item.");
+        return;
+
+    }
+
+    console.log("Sending buffet:", buffetItems);
+
+    // Tell the editor this came from Buffet Builder
+    sessionStorage.setItem("editorSource", "buffet");
+
+    // Save the buffet items
     sessionStorage.setItem(
         "currentBuffet",
         JSON.stringify(buffetItems)
@@ -367,5 +382,7 @@ generateCardsButton.addEventListener("click", () => {
     );
 
     window.location.href = "menu-editor.html";
+
+});
 
 });

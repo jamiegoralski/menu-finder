@@ -733,13 +733,19 @@ if (favoritesOnly) {
             JSON.parse(JSON.stringify(favoriteItems));
 
         // Save only for the editor
-        localStorage.setItem(
-            "editorCards",
-            JSON.stringify(editableCards)
-        );
+localStorage.setItem(
+    "editorCards",
+    JSON.stringify(editableCards)
+);
 
-        // Open the editor
-        window.location.href = "menu-editor.html";
+// Tell the editor where we came from
+sessionStorage.setItem("editorSource", "favorites");
+
+// Remove any old buffet data
+sessionStorage.removeItem("currentBuffet");
+
+// Open the editor
+window.location.href = "menu-editor.html";
 
     });
 

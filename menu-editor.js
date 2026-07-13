@@ -1,10 +1,31 @@
-// Check if Buffet Builder sent menu items
-const buffetCards = JSON.parse(sessionStorage.getItem("currentBuffet"));
-console.log("Received buffet:", buffetCards);
+// ========================================
+// Determine where the editor was opened from
+// ========================================
 
-const cards = buffetCards
-    ? buffetCards
-    : (JSON.parse(localStorage.getItem("editorCards")) || []);
+const editorSource =
+    sessionStorage.getItem("editorSource");
+
+let cards = [];
+
+if (editorSource === "buffet") {
+
+    cards =
+        JSON.parse(
+            sessionStorage.getItem("currentBuffet")
+        ) || [];
+
+    console.log("Loaded Buffet Builder cards");
+
+} else {
+
+    cards =
+        JSON.parse(
+            localStorage.getItem("editorCards")
+        ) || [];
+
+    console.log("Loaded Favorites cards");
+
+}
 
 const cardList =
     document.getElementById("cardList");
