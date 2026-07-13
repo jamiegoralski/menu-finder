@@ -45,9 +45,9 @@ const lifestyleFields = [
 
     { field:"Vegetarian", label:"Vegetarian" },
 
-    { field:"GlutenFriendly", label:"Gluten Friendly" },
+    { field:"GlutenFriendly", label:"Gluten-Friendly" },
 
-    { field:"DairyFriendly", label:"Dairy Friendly" }
+    { field:"DairyFriendly", label:"Dairy-Friendly" }
 
 ];
 
@@ -314,10 +314,10 @@ function updatePreview() {
         lifestyle.push("Vegetarian");
 
     if (currentCard.GlutenFriendly)
-        lifestyle.push("Gluten Friendly");
+        lifestyle.push("Gluten-Friendly");
 
     if (currentCard.DairyFriendly)
-        lifestyle.push("Dairy Friendly");
+        lifestyle.push("Dairy-Friendly");
 
     let allergens = [];
 
