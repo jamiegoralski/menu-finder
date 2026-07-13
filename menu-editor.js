@@ -6,9 +6,6 @@ const cards = buffetCards
     ? buffetCards
     : (JSON.parse(localStorage.getItem("editorCards")) || []);
 
-// Clear it so it only loads once
-sessionStorage.removeItem("currentBuffet");
-
 const cardList =
     document.getElementById("cardList");
 

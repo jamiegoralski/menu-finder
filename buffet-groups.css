@@ -60,6 +60,54 @@ header p{
 }
 
 /* ===========================
+   BACK BUTTON
+=========================== */
+
+.back-button{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    margin-bottom:20px;
+
+    color:#9ca3af;
+
+    text-decoration:none;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    transition:all .25s ease;
+
+}
+
+.back-button:hover{
+
+    color:#ffffff;
+
+    transform:translateX(-4px);
+
+}
+
+.back-button i{
+
+    font-size:13px;
+
+    transition:transform .25s ease;
+
+}
+
+.back-button:hover i{
+
+    transform:translateX(-2px);
+
+}
+
+/* ===========================
    LAYOUT
 =========================== */
 
@@ -309,34 +357,64 @@ header p{
 .library-item{
 
     display:flex;
+
     align-items:center;
-    justify-content:space-between;
 
     gap:18px;
 
     background:#111111;
+
     border:1px solid rgba(255,255,255,.06);
+
     border-radius:18px;
 
     padding:18px 20px;
 
-    min-height:78px;
+    min-height:90px;
 
     transition:.25s;
 
 }
 
-.library-item span{
+.library-text{
 
     flex:1;
 
     min-width:0;
 
-    font-size:16px;
+}
 
-    line-height:1.35;
+.library-title{
 
-    overflow-wrap:anywhere;
+    font-size:17px;
+
+    font-weight:700;
+
+    color:#ffffff;
+
+    margin-bottom:4px;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+}
+
+.library-description{
+
+    font-size:14px;
+
+    font-weight:400;
+
+    color:#9ca3af;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
 
 }
 

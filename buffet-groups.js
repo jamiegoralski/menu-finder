@@ -57,13 +57,32 @@ function renderLibrary(items){
 
         div.className="library-item";
 
-        div.innerHTML=`
+        div.innerHTML = `
 
-            <span>${item.Title}</span>
+    <div class="library-text">
 
-            <button class="add-btn">+</button>
+        <div class="library-title">
+            ${item.Title}
+        </div>
 
-        `;
+        ${
+            item.MenuDescription
+                ? `
+                <div class="library-description">
+                    ${item.MenuDescription.substring(0,40)}
+                    ${item.MenuDescription.length > 40 ? "..." : ""}
+                </div>
+                `
+                : ""
+        }
+
+    </div>
+
+    <button class="add-btn">
+        +
+    </button>
+
+`;
 
         div.querySelector("button").addEventListener("click",()=>{
 
