@@ -1360,6 +1360,7 @@ h1 {
     display:flex;
     align-items:center;
     justify-content:center;
+    gap:14px;
 
     height:64px;
 
@@ -1383,6 +1384,11 @@ h1 {
 
 }
 
+.buffet-builder-btn i{
+    font-size:18px;
+    margin-right:4px;
+}
+
 .buffet-builder-btn:hover{
 
     background:#1d4ed8;
@@ -1400,5 +1406,39 @@ h1 {
     align-items:stretch;
 
     margin:28px 0;
+
+}
+
+/* ==========================================
+   MOBILE BUTTON LAYOUT
+========================================== */
+
+@media (max-width:768px){
+
+    .top-buttons{
+        flex-direction:column;
+        gap:16px;
+    }
+
+    .download-btn,
+    .buffet-builder-btn{
+
+        width:100%;
+        flex:none;
+
+        height:72px;
+
+        justify-content:center;
+        gap:16px;
+
+        font-size:17px;
+
+        padding:0 24px;
+    }
+
+    .download-btn i,
+    .buffet-builder-btn i{
+        font-size:28px;
+    }
 
 }
