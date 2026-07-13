@@ -46,17 +46,48 @@
 
         <div class="workspace-header">
 
-            <h1>Menu Card Editor</h1>
+    <div>
 
-            <button id="downloadPdf">
+        <h1>Menu Card Editor</h1>
 
-                <i class="fa-solid fa-file-pdf"></i>
+        <div class="print-options">
 
-                Download PDF
+            <span class="print-label">
+                Copies per Card
+            </span>
 
-            </button>
+            <div class="copy-selector">
+
+                <button id="decreaseCopies" type="button">
+                    −
+                </button>
+
+                <input
+                    id="copyCount"
+                    type="number"
+                    value="1"
+                    min="1"
+                >
+
+                <button id="increaseCopies" type="button">
+                    +
+                </button>
+
+            </div>
 
         </div>
+
+    </div>
+
+    <button id="downloadPdf">
+
+        <i class="fa-solid fa-file-pdf"></i>
+
+        Download PDF
+
+    </button>
+
+</div>
 
         <div class="workspace-body">
 

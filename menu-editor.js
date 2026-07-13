@@ -447,7 +447,21 @@ const previousIndex = currentIndex;
     const preview =
         document.getElementById("previewCard");
 
-    const exportCards = cards;
+    const copies = parseInt(
+    document.getElementById("copyCount").value
+) || 1;
+
+const exportCards = [];
+
+cards.forEach(card => {
+
+    for (let i = 0; i < copies; i++) {
+
+        exportCards.push(card);
+
+    }
+
+});
 
     const positions = [
 
@@ -570,3 +584,32 @@ function rebuildSidebar(){
     cardList.firstChild.classList.add("active");
 
 }
+
+// ==============================
+// Print Options
+// ==============================
+
+const copyInput =
+    document.getElementById("copyCount");
+
+document
+    .getElementById("increaseCopies")
+    .addEventListener("click", () => {
+
+        copyInput.value =
+            Number(copyInput.value) + 1;
+
+    });
+
+document
+    .getElementById("decreaseCopies")
+    .addEventListener("click", () => {
+
+        if(Number(copyInput.value) > 1){
+
+            copyInput.value =
+                Number(copyInput.value) - 1;
+
+        }
+
+    });

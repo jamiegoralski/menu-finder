@@ -736,3 +736,102 @@ textarea{
     transform:translateY(-2px);
 
 }
+
+/* ==========================================
+   PRINT OPTIONS
+========================================== */
+
+.print-options{
+
+    margin-top:18px;
+
+}
+
+.print-label{
+
+    display:block;
+
+    margin-bottom:12px;
+
+    color:#9ca3af;
+
+    font-size:14px;
+
+    font-weight:500;
+
+}
+
+.copy-selector{
+
+    display:flex;
+
+    align-items:center;
+
+    width:180px;
+
+    height:48px;
+
+    background:#111111;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+}
+
+.copy-selector button{
+
+    width:48px;
+
+    height:48px;
+
+    border:none;
+
+    background:transparent;
+
+    color:white;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.copy-selector button:hover{
+
+    background:#2563eb;
+
+}
+
+#copyCount{
+
+    flex:1;
+
+    height:100%;
+
+    border:none;
+
+    background:transparent;
+
+    color:white;
+
+    text-align:center;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    outline:none;
+
+}
+
+#copyCount::-webkit-inner-spin-button,
+#copyCount::-webkit-outer-spin-button{
+
+    display:none;
+
+}
