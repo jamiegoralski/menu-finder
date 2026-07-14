@@ -16,6 +16,12 @@ body{
 
     overflow:hidden;
 
+    -webkit-font-smoothing: antialiased;
+
+-moz-osx-font-smoothing: grayscale;
+
+text-rendering: geometricPrecision;
+
 }
 
 /* ===========================
@@ -259,7 +265,7 @@ textarea{
 
     background:white;
 
-    border:2px solid #005A8D;
+    border:none;
 
     border-radius:4px;
 
@@ -393,17 +399,21 @@ textarea{
 
 .preview-fold{
 
-    border-top:2px dashed #2b6cb0;
+    border-top:2px solid #2b6cb0;
 
 }
 
 .preview-bottom{
+
+    position:relative;
 
     padding:28px 20px 20px;
 
     color:#000;
 
     overflow:hidden;
+
+    height:100%;
 
 }
 
@@ -473,7 +483,7 @@ textarea{
 
     font-weight:700;
 
-    color:#666;
+    color:#005A8D;
 
 }
 
@@ -833,5 +843,35 @@ textarea{
 #copyCount::-webkit-outer-spin-button{
 
     display:none;
+
+}
+
+/* ==========================================
+   SHARED FACILITY DISCLAIMER
+========================================== */
+
+.shared-facility-note{
+
+    position:absolute;
+
+    left:20px;
+
+    right:20px;
+
+    bottom:18px;
+
+    padding-top:12px;
+
+    border-top:1px solid #d8d8d8;
+
+    font-size:10px;
+
+    color:#666;
+
+    text-align:center;
+
+    line-height:1.35;
+
+    font-style:italic;
 
 }

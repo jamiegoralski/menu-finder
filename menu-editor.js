@@ -421,6 +421,10 @@ if (
         : ""
 }
 
+<div class="shared-facility-note">
+    Prepared in a Shared Facility with Allergens
+</div>
+
         </div>
 
     `;
@@ -465,13 +469,13 @@ cards.forEach(card => {
 
     const positions = [
 
-        { x: .10, y: .08 },
-        { x: 4.30, y: .08 },
+    { x: 0.22, y: 0.12 },
+    { x: 4.27, y: 0.12 },
 
-        { x: .10, y: 5.58 },
-        { x: 4.30, y: 5.58 }
+    { x: 0.22, y: 5.52 },
+    { x: 4.27, y: 5.52 }
 
-    ];
+];
 
     for(let i = 0; i < exportCards.length; i++){
 
@@ -482,22 +486,44 @@ cards.forEach(card => {
         await new Promise(r => setTimeout(r,40));
 
         const canvas = await html2canvas(preview,{
-            scale:2,
-            backgroundColor:"#ffffff"
-        });
+
+    scale:4,
+
+    useCORS:true,
+
+    backgroundColor:"#ffffff",
+
+    logging:false
+
+});
 
         const img = canvas.toDataURL("image/png");
 
         const pos = positions[i % 4];
 
         pdf.addImage(
-            img,
-            "PNG",
-            pos.x,
-            pos.y,
-            4.05,
-            5.40
-        );
+    img,
+    "PNG",
+    pos.x,
+    pos.y,
+    4.05,
+    5.40,
+    undefined,
+    "FAST"
+);
+
+        // Draw crisp blue border
+pdf.setDrawColor(0, 90, 141);
+
+// 5 point border
+pdf.setLineWidth(0.08);
+
+pdf.rect(
+    pos.x,
+    pos.y,
+    4.05,
+    5.40
+);
 
         if((i + 1) % 4 === 0 && i < exportCards.length - 1){
             pdf.addPage();
