@@ -8,6 +8,10 @@
     const NON_CATALOG = /^(vegan|vegetarian|gluten\s*free|no\s+garlic|no\s+onion|no\s+tomato).{0,70}(meal|bread|empanada)/i;
     const HEADING = /^(~+|\*{2,})|^(salad|entree|dessert|beverages?\s+on\s+consumption|hot\s+beverage|condiments)\b/i;
     const DESCRIPTION = /^(with\b|\*\*|\d+\)|oil\s*&\s*vinegar\b|prepared\b|served\b)/i;
+    const BEO_TITLE_ALIASES = {
+        "Assorted Breakfast Pastries": ["Breakfast Pastries"],
+        "Schreiner's Southwest Turkey Sausage": ["Turkey Sausage"]
+    };
 
     function normalize(value) {
         return String(value || "")
@@ -57,6 +61,12 @@
         return (2 * shared) / (left.size + right.size);
     }
 
+    function aliasesForItem(item) {
+        const itemAliases = Array.isArray(item.BEOAliases) ? item.BEOAliases : [];
+        const builtInAliases = BEO_TITLE_ALIASES[item.Title] || [];
+        return [...itemAliases, ...builtInAliases];
+    }
+
     function scoreCandidate(candidate, item) {
         const title = item.Title || "";
         const a = normalize(candidate.text);
@@ -74,8 +84,12 @@
             candidateWords[0] === titleWords[0] && candidateWords[1] === titleWords[1];
         const contextOverlap = contextWords.filter(word => titleWords.includes(word)).length;
         if (startsWithCatalogName && contextOverlap >= 2) return 89;
-        const aliases = Array.isArray(item.BEOAliases) ? item.BEOAliases : [];
-        if (aliases.some(alias => normalize(alias) === a)) return 98;
+        const aliases = aliasesForItem(item);
+        if (aliases.some(alias => {
+            const normalizedAlias = normalize(alias);
+            return normalizedAlias === a ||
+                (tokens(alias).length >= 2 && a.startsWith(`${normalizedAlias} `));
+        })) return 98;
         const score = (tokenOverlap(candidate.text, title) * 68) + (dice(candidate.text, title) * 32);
         return Math.round(score);
     }
@@ -129,8 +143,33 @@
         return candidates;
     }
 
+    function expandCompoundCandidates(candidates, menuItems) {
+        const exactCatalogNames = new Set();
+        menuItems.forEach(item => {
+            exactCatalogNames.add(normalize(item.Title));
+            const aliases = aliasesForItem(item);
+            aliases.forEach(alias => exactCatalogNames.add(normalize(alias)));
+        });
+
+        return candidates.flatMap(candidate => {
+            const parts = candidate.text
+                .split(/\s*(?:,|&|\band\b)\s*/i)
+                .map(part => part.trim())
+                .filter(Boolean);
+            const isExactCompound = parts.length > 1 &&
+                parts.every(part => exactCatalogNames.has(normalize(part)));
+            if (!isExactCompound) return [candidate];
+            return parts.map((part, index) => ({
+                ...candidate,
+                id: `${candidate.id}-part-${index}`,
+                text: part,
+                compoundText: candidate.text
+            }));
+        });
+    }
+
     function rankMatches(candidates, menuItems) {
-        return candidates.map(candidate => {
+        return expandCompoundCandidates(candidates, menuItems).map(candidate => {
             const options = menuItems
                 .map(item => ({ item, score: scoreCandidate(candidate, item) }))
                 .filter(option => option.score > 0)
@@ -174,6 +213,6 @@
         return { text: ocrPages.join("\n"), source: "high-resolution OCR", pages: pdf.numPages };
     }
 
-    root.BEOImporter = { extractPdfText, parseBEO, rankMatches, normalize, scoreCandidate };
+    root.BEOImporter = { extractPdfText, parseBEO, rankMatches, normalize, scoreCandidate, expandCompoundCandidates };
     if (typeof module !== "undefined") module.exports = root.BEOImporter;
 })(typeof window !== "undefined" ? window : globalThis);
