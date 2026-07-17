@@ -49,6 +49,23 @@
 
     <h2>Current Buffet</h2>
 
+    <section class="beo-import" aria-labelledby="beoImportHeading">
+        <div class="beo-import-heading">
+            <div>
+                <p class="eyebrow">BEO IMPORT</p>
+                <h3 id="beoImportHeading">Import menu selections from a PDF</h3>
+            </div>
+            <span id="beoStatus" class="beo-status" aria-live="polite">Choose a BEO</span>
+        </div>
+        <p class="beo-copy">The importer reads the Menu Selections section and adds only matching items already in the Menu Library.</p>
+        <div class="beo-actions">
+            <label class="file-button" for="beoUpload">Choose BEO PDF</label>
+            <input id="beoUpload" type="file" accept="application/pdf,.pdf" hidden>
+            <button id="analyzeEvent" class="secondary-btn" disabled>Analyze BEO</button>
+        </div>
+        <p id="beoResult" class="beo-result" hidden aria-live="polite"></p>
+    </section>
+
     <input
         id="buffetName"
         type="text"
@@ -92,6 +109,16 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<script>
+    window.pdfjsReady = import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs")
+        .then(module => {
+            window.pdfjsLib = module;
+            module.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+        });
+</script>
+<script src="beo-importer.js"></script>
 
 <script src="buffet-groups.js"></script>
 

@@ -14,8 +14,67 @@ const buffetList = document.getElementById("buffetList");
 const saveButton = document.getElementById("saveBuffet");
 const newButton = document.getElementById("newBuffet");
 const generateCardsButton = document.getElementById("generateCards");
+const beoUpload = document.getElementById("beoUpload");
+const analyzeEventButton = document.getElementById("analyzeEvent");
+const beoStatus = document.getElementById("beoStatus");
+const beoResult = document.getElementById("beoResult");
 
 let savedBuffets = [];
+let selectedBEOFile = null;
+let beoMatches = [];
+
+function showBEOResult(message) {
+    beoResult.hidden = false;
+    beoResult.textContent = message;
+}
+
+beoUpload.addEventListener("change", event => {
+    selectedBEOFile = event.target.files[0] || null;
+    beoMatches = [];
+    beoResult.hidden = true;
+    analyzeEventButton.disabled = !selectedBEOFile;
+    beoStatus.textContent = selectedBEOFile ? selectedBEOFile.name : "Choose a BEO";
+});
+
+analyzeEventButton.addEventListener("click", async () => {
+    if (!selectedBEOFile || !menuItems.length) return;
+    analyzeEventButton.disabled = true;
+    beoResult.hidden = true;
+    try {
+        beoStatus.textContent = "Preparing PDF…";
+        await window.pdfjsReady;
+        const extracted = await window.BEOImporter.extractPdfText(selectedBEOFile, message => {
+            beoStatus.textContent = message;
+        });
+        const candidates = window.BEOImporter.parseBEO(extracted.text);
+        beoMatches = window.BEOImporter.rankMatches(candidates, menuItems);
+        const catalogItems = beoMatches
+            .filter(match => match.matched)
+            .map(match => match.best.item)
+            .filter((item, index, items) => items.findIndex(other => other.Title === item.Title) === index);
+        if (!catalogItems.length) {
+            beoStatus.textContent = "No Menu Library items found";
+            showBEOResult("No matching Menu Library items were found in this PDF.");
+            return;
+        }
+        let added = 0;
+        catalogItems.forEach(item => {
+            if (!buffetItems.some(existing => existing.Title === item.Title)) {
+                buffetItems.push(item);
+                added++;
+            }
+        });
+        renderCurrentBuffet();
+        beoStatus.textContent = `${added} Menu Library item${added === 1 ? "" : "s"} added`;
+        showBEOResult(`${added} existing Menu Library item${added === 1 ? "" : "s"} added to the current buffet.`);
+    } catch (error) {
+        console.error("BEO analysis failed", error);
+        beoStatus.textContent = "Analysis could not finish";
+        showBEOResult(error.message || "Please retry the upload.");
+    } finally {
+        analyzeEventButton.disabled = false;
+    }
+});
 
 // Load menu items
 async function loadMenu() {
