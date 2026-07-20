@@ -106,11 +106,6 @@ function display(items) {
     results.innerHTML = `
 
         <div class="empty-state">
-
-            <div class="empty-icon">
-    <img src="plate-icon3.png" alt="Plate">
-</div>
-
             <h2>No menu items found</h2>
 
             <p>

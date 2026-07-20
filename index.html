@@ -20,39 +20,39 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
 <body>
 
+    <nav class="site-nav" aria-label="Main navigation">
+        <a class="site-brand" href="index.html">Aventura Menu Studio</a>
+        <div class="site-nav-links">
+            <a class="active" href="index.html">Menu Catalog</a>
+            <a href="buffet-groups.html">Buffet Builder</a>
+        </div>
+    </nav>
+
     <div class="container">
 
-        <h1>Aventura Menu Studio</h1>
+        <header class="page-header">
+            <div class="title-block">
+                <h1>Aventura Menu Studio</h1>
+            </div>
 
-        <p class="subtitle">
-            Discover Aventura Catering's Menu
-        </p>
-
-        <div class="search-wrapper">
-
-    <input
-        type="text"
-        id="search"
-        placeholder="Search menu items, ingredients, cuisines, allergens..."
-    >
-
-<div class="top-buttons">
+            <div class="top-buttons">
 
     <button id="downloadPDF" class="download-btn">
     <i class="fa-solid fa-file-pdf"></i>
-    <span>Download Complete Menu Catalog</span>
-</button>
-
-    <button
-    class="buffet-builder-btn"
-    onclick="window.location.href='buffet-groups.html'">
-
-    <i class="fa-solid fa-utensils"></i>
-    <span>Buffet Builder</span>
-
+    <span>Download Catalog</span>
 </button>
 
 </div>
+        </header>
+
+        <section class="controls-panel" aria-label="Menu search and filters">
+            <div class="search-wrapper">
+                <input
+                    type="text"
+                    id="search"
+                    placeholder='Try "chicken", "gluten-friendly", or "vinaigrette"'
+                >
+            </div>
 
 <div class="filter-bar">
 
@@ -169,6 +169,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 </button>
 
         </div>
+        </section>
 
         <div id="activeFilters"></div>
 
