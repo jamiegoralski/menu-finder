@@ -1429,8 +1429,8 @@ body{
     bottom: 28px;
     right: 28px;
 
-    width: 34px;
-    height: 34px;
+    width: 64px;
+    height: 64px;
 
     background: transparent;
     border: none;
@@ -1438,7 +1438,7 @@ body{
 
     cursor: pointer;
 
-    opacity: 0.22;
+    opacity: 0.9;
 
     transition: all .35s ease;
 
@@ -1450,16 +1450,16 @@ body{
     height: 100%;
     display: block;
 
-    filter: brightness(.75);
+    image-rendering: pixelated;
 }
 
 #cactusButton:hover {
-    opacity: .9;
-    transform: scale(1.15);
+    opacity: 1;
+    transform: scale(1.08);
 }
 
 #cactusButton:hover img {
-    filter: brightness(1);
+    image-rendering: pixelated;
 }
 
 /* ==========================================
