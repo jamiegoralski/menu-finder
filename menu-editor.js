@@ -303,123 +303,105 @@ descriptionInput.addEventListener("input", () => {
 // Preview
 // ==============================
 
-function updatePreview() {
+function getLifestyleLabels(card) {
 
-    const lifestyle = [];
+    return [
+        card.Vegan && "Vegan",
+        card.Vegetarian && "Vegetarian",
+        card.GlutenFriendly && "Gluten-Friendly",
+        card.DairyFriendly && "Dairy-Friendly"
+    ].filter(Boolean);
 
-    if (currentCard.Vegan)
-        lifestyle.push("Vegan");
+}
 
-    if (currentCard.Vegetarian)
-        lifestyle.push("Vegetarian");
+function getAllergenLabels(card) {
 
-    if (currentCard.GlutenFriendly)
-        lifestyle.push("Gluten-Friendly");
+    if (!card.The9Allergens) return [];
 
-    if (currentCard.DairyFriendly)
-        lifestyle.push("Dairy-Friendly");
+    return card.The9Allergens
+        .replace(/Prepared in (?:a )?Shared Facility with Allergens\s*\|?/gi, "")
+        .replace(/^\s*Contains\s+/i, "")
+        .replace(/\s*&\s*/g, ",")
+        .split(",")
+        .map(value => value.trim())
+        .filter(Boolean);
 
-    let allergens = [];
+}
 
-    if (currentCard.The9Allergens) {
+function escapeCardText(value) {
 
-        let text =
-            currentCard.The9Allergens;
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
-        if (text.includes("|")) {
+}
 
-            text =
-                text.split("|")[1];
+function fitPreviewCard() {
 
-        }
+    const face = document.querySelector("#previewCard .preview-bottom");
+    if (!face) return;
 
-        text = text
-    .replace(/Contains\s+/gi, "")
-    .replace(/&/g, ",");
+    face.classList.remove("compact", "dense");
 
-        allergens = text
-            .split(",")
-            .map(x => x.trim())
-            .filter(Boolean);
-
+    if (face.scrollHeight > face.clientHeight) {
+        face.classList.add("compact");
     }
 
-    let descriptionClass = "";
+    if (face.scrollHeight > face.clientHeight) {
+        face.classList.remove("compact");
+        face.classList.add("dense");
+    }
 
-if (
-    currentCard.MenuDescription &&
-    currentCard.MenuDescription.length > 70
-) {
-    descriptionClass = "small-description";
 }
+
+function updatePreview() {
+
+    const lifestyle = getLifestyleLabels(currentCard);
+    const allergens = getAllergenLabels(currentCard);
+    const detailRows = [
+        lifestyle.length ? ["Lifestyle", lifestyle] : null,
+        allergens.length ? ["Allergens", allergens] : null
+    ].filter(Boolean);
 
     document.getElementById("previewCard").innerHTML = `
 
         <div class="preview-top"></div>
 
-        <div class="preview-fold"></div>
-
         <div class="preview-bottom">
+
+            <div class="preview-accent"></div>
 
             <h2 class="preview-title">
 
-                ${currentCard.Title}
+                ${escapeCardText(currentCard.Title)}
 
             </h2>
 
             ${
                 currentCard.MenuDescription
                     ? `
-            <p class="preview-description ${descriptionClass}">
+            <p class="preview-description">
 
-    ${currentCard.MenuDescription}
+    ${escapeCardText(currentCard.MenuDescription)}
 
 </p>
             `
                     : ""
             }
 
-            ${
-                lifestyle.length
-                    ? `
-            <div class="preview-heading">
-
-                Lifestyle
-
-            </div>
-
-            <div class="preview-badges">
-
-                ${lifestyle.map(item => `
-                    <span class="preview-badge">${item}</span>
-                `).join("")}
-
-            </div>
-            `
-                    : ""
-            }
-
-            ${
-    allergens.length
-        ? `
-            ${
-                lifestyle.length
-                    ? `<div class="preview-divider"></div>`
-                    : ""
-            }
-
-            <div class="preview-heading">
-                Allergens
-            </div>
-
-            <div class="preview-badges">
-                ${allergens.map(item => `
-                    <span class="preview-badge">${item}</span>
+            ${detailRows.length ? `
+            <div class="preview-details">
+                ${detailRows.map(([label, values]) => `
+                <div class="preview-detail-row">
+                    <span class="preview-detail-label">${label}</span>
+                    <span class="preview-detail-value">${values.map(escapeCardText).join(" · ")}</span>
+                </div>
                 `).join("")}
             </div>
-        `
-        : ""
-}
+            ` : ""}
 
 <div class="shared-facility-note">
     Prepared in a Shared Facility with Allergens
@@ -428,6 +410,8 @@ if (
         </div>
 
     `;
+
+    fitPreviewCard();
 
 }
 
@@ -512,11 +496,9 @@ cards.forEach(card => {
     "FAST"
 );
 
-        // Draw crisp blue border
-pdf.setDrawColor(0, 90, 141);
-
-// 5 point border
-pdf.setLineWidth(0.08);
+        // Draw a crisp, subtle cut line around each touching card.
+pdf.setDrawColor(112, 146, 162);
+pdf.setLineWidth(0.01);
 
 pdf.rect(
     pos.x,
