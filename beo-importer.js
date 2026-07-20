@@ -2,14 +2,19 @@
 (function (root) {
     "use strict";
 
-    const MENU_START = /\bmenu\s+selections?\b/i;
+    const MENU_START = /\b(?:menu\s+selections?|food\s*\/\s*service\s+items?)\b/i;
+    const MENU_END = /^(comments?|set\s*up\s+requirements?|event\s+notes?|staffing)\b/i;
     const PAGE_FOOTER = /^(printed\b|page\s+\d+\s+(of|\/))/i;
     const METADATA = /^(customer|event\s+(information|date|number|group|manager)|location|service\s+type|set\s*up|guest\s+count|sales\s+person|phone|email|company|contract|special\s+instructions?|dietary\s+codes?|number\s+of\s+buffets?)\b/i;
     const NON_CATALOG = /^(vegan|vegetarian|gluten\s*free|no\s+garlic|no\s+onion|no\s+tomato).{0,70}(meal|bread|empanada)/i;
+    const ORDER_SHEET_NON_CATALOG = /^fresh\s+fruit\s+cup\b/i;
     const HEADING = /^(~+|\*{2,})|^(salad|entree|dessert|beverages?\s+on\s+consumption|hot\s+beverage|condiments)\b/i;
     const DESCRIPTION = /^(with\b|\*\*|\d+\)|oil\s*&\s*vinegar\b|prepared\b|served\b)/i;
     const BEO_TITLE_ALIASES = {
         "Assorted Breakfast Pastries": ["Breakfast Pastries"],
+        "Assorted Danish Pastries": ["Assorted Danish Pastries (dz)"],
+        "Carne Asada Breakfast Burrito": ["Breakfast Burrito - Carne Asada"],
+        "Vegetarian Breakfast Burrito": ["Breakfast Burrito No Meat"],
         "Schreiner's Southwest Turkey Sausage": ["Turkey Sausage"],
         "Pesto Chicken": ["Pesto Grilled Chicken Breast"]
     };
@@ -107,6 +112,7 @@
             !HEADING.test(line) &&
             !DESCRIPTION.test(line) &&
             !NON_CATALOG.test(line) &&
+            !ORDER_SHEET_NON_CATALOG.test(line) &&
             !/^\d+$/.test(line);
     }
 
@@ -122,6 +128,7 @@
             if (!line) return;
             if (MENU_START.test(line)) { inMenu = true; return; }
             if (!inMenu) return;
+            if (MENU_END.test(line.replace(/^~+|~+$/g, "").trim())) { inMenu = false; return; }
             if (HEADING.test(line)) {
                 section = line.replace(/[~*]/g, "").trim() || section;
                 return;
