@@ -10,7 +10,8 @@
     const DESCRIPTION = /^(with\b|\*\*|\d+\)|oil\s*&\s*vinegar\b|prepared\b|served\b)/i;
     const BEO_TITLE_ALIASES = {
         "Assorted Breakfast Pastries": ["Breakfast Pastries"],
-        "Schreiner's Southwest Turkey Sausage": ["Turkey Sausage"]
+        "Schreiner's Southwest Turkey Sausage": ["Turkey Sausage"],
+        "Pesto Chicken": ["Pesto Grilled Chicken Breast"]
     };
 
     function normalize(value) {
