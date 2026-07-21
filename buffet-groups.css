@@ -951,10 +951,25 @@ header p{color:var(--studio-muted)}
     .buffet-name,.search{height:52px;margin-bottom:16px;padding:0 16px;border-radius:12px}
     .current-items,.buffet-list,.library{gap:10px;padding-right:0}
     .menu-item,.buffet-card,.library-item{min-height:0;padding:14px;border-radius:12px}
-    .library-item{gap:12px}
-    .library-title{font-size:15px}
-    .library-description{font-size:12px}
-    .library-item button,.add-btn,.remove-btn{width:44px;height:44px;flex:0 0 44px}
+    .library-item{flex:0 0 auto;align-items:flex-start;gap:10px;padding:14px 12px 14px 14px}
+    .library-text{padding:1px 0;min-width:0}
+    .library-title{
+        font-size:15px;
+        line-height:1.35;
+        white-space:normal;
+        overflow:visible;
+        text-overflow:clip;
+    }
+    .library-description{
+        margin-top:3px;
+        font-size:13px;
+        line-height:1.4;
+        white-space:normal;
+        overflow:visible;
+        text-overflow:clip;
+    }
+    .library-item button,.add-btn{width:32px;height:32px;flex:0 0 32px;font-size:18px}
+    .remove-btn{width:40px;height:40px;flex:0 0 40px}
     .primary-btn,.save-btn,.secondary-btn{height:52px;border-radius:12px}
     .primary-btn{margin-bottom:18px}
     .save-btn{margin-top:18px}
