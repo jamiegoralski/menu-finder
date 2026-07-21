@@ -9,15 +9,24 @@
     const NON_CATALOG = /^(vegan|vegetarian|gluten\s*free|no\s+garlic|no\s+onion|no\s+tomato).{0,70}(meal|bread|empanada)/i;
     const ORDER_SHEET_NON_CATALOG = /^fresh\s+fruit\s+cup\b/i;
     const HEADING = /^(~+|\*{2,})|^(salad|entree|dessert|beverages?\s+on\s+consumption|hot\s+beverage|condiments)\b/i;
-    const DESCRIPTION = /^(with\b|\*\*|\d+\)|oil\s*&\s*vinegar\b|prepared\b|served\b)/i;
+    const DESCRIPTION = /^(with\b|\*\*|\d+\)|prepared\b|served\b)/i;
     const BEO_TITLE_ALIASES = {
         "Assorted Breakfast Pastries": ["Breakfast Pastries"],
         "Assorted Danish Pastries": ["Assorted Danish Pastries (dz)"],
         "Assorted Rolls": ["Assorfed Rolls"],
+        "Black Olives": ["Black Olive"],
+        "Cherry Tomatoes": ["Cherry Tomato"],
         "Carne Asada Breakfast Burrito": ["Breakfast Burrito - Carne Asada"],
         "Croutons": ["Homemade Croutons", "Homemade Croutions"],
         "Grated Cheddar Cheese": ["Grated Cheese"],
+        "Grilled Chicken Slices": ["Grilled Chicken Slice"],
+        "Lettuce Mix": ["Lettuce Mix of Romaine + Green Leaf + Spinach"],
+        "Oil & Vinegar": ["Qil & Vinegar"],
         "Parmesan Cheese": ["Shaved Parmesan"],
+        "Red Onions": ["Red Onion"],
+        "Shredded Carrots": ["Shredded Carrot"],
+        "Sliced Black Olives": ["Sliced Black Olive"],
+        "Sliced Cucumbers ": ["Sliced Cucumber"],
         "Butter ": ["Butter"],
         "Warm Flour Tortillas": ["Flour Tortillas"],
         "Vegetarian Breakfast Burrito": ["Breakfast Burrito No Meat"],
@@ -167,6 +176,22 @@
                 return;
             }
             if (!isUsefulMenuLine(parsed.text)) return;
+            const wrappedItems = [
+                { continuation: /^tomatoes?$/i, suffix: /\bcherry$/i, title: "Cherry Tomatoes" },
+                { continuation: /^olives?$/i, suffix: /\bsliced\s+black$/i, title: "Sliced Black Olives" },
+                { continuation: /^slices?[,.]?$/i, suffix: /\bgrilled\s+chicken$/i, title: "Grilled Chicken Slices" }
+            ];
+            const wrapped = wrappedItems.find(rule => rule.continuation.test(parsed.text));
+            const previous = candidates[candidates.length - 1];
+            if (wrapped && previous && wrapped.suffix.test(previous.text)) {
+                previous.text = previous.text.replace(wrapped.suffix, "").replace(/[\s,]+$/, "").trim();
+                if (!previous.text) candidates.pop();
+                candidates.push({
+                    id: `beo-${index}-wrapped`, text: wrapped.title, quantity: parsed.quantity,
+                    section, packageContext, sourceLine: index + 1
+                });
+                return;
+            }
             candidates.push({
                 id: `candidate-${index}-${candidates.length}`,
                 text: parsed.text,
@@ -188,10 +213,16 @@
         });
 
         return candidates.flatMap(candidate => {
-            const parts = candidate.text
-                .split(/\s*(?:,|&|\band\b)\s*/i)
+            const commaParts = candidate.text
+                .split(/\s*,\s*/)
                 .map(part => part.trim())
                 .filter(Boolean);
+            const parts = commaParts.flatMap(part => {
+                const subparts = part.split(/\s*(?:&|\+|\band\b)\s*/i).map(value => value.trim()).filter(Boolean);
+                return subparts.length > 1 && subparts.every(value => exactCatalogNames.has(normalize(value)))
+                    ? subparts
+                    : [part];
+            });
             const isExactCompound = parts.length > 1 &&
                 parts.every(part => exactCatalogNames.has(normalize(part)));
             if (!isExactCompound) return [candidate];
