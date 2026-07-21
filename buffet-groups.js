@@ -48,25 +48,24 @@ analyzeEventButton.addEventListener("click", async () => {
         });
         const candidates = window.BEOImporter.parseBEO(extracted.text);
         beoMatches = window.BEOImporter.rankMatches(candidates, menuItems);
-        const catalogItems = beoMatches
-            .filter(match => match.matched)
-            .map(match => match.best.item)
-            .filter((item, index, items) => items.findIndex(other => other.Title === item.Title) === index);
-        if (!catalogItems.length) {
-            beoStatus.textContent = "No Menu Library items found";
-            showBEOResult("No matching Menu Library items were found in this PDF.");
-            return;
-        }
-        let added = 0;
-        catalogItems.forEach(item => {
-            if (!buffetItems.some(existing => existing.Title === item.Title)) {
-                buffetItems.push(item);
-                added++;
-            }
-        });
-        renderCurrentBuffet();
-        beoStatus.textContent = `${added} Menu Library item${added === 1 ? "" : "s"} added`;
-        showBEOResult(`${added} existing Menu Library item${added === 1 ? "" : "s"} added to the current buffet.`);
+        sessionStorage.setItem("beoReviewData", JSON.stringify({
+            fileName: selectedBEOFile.name,
+            source: extracted.source,
+            matches: beoMatches.map(match => ({
+                id: match.id,
+                text: match.text,
+                quantity: match.quantity,
+                section: match.section,
+                matched: match.matched,
+                bestTitle: match.best ? match.best.item.Title : null,
+                bestScore: match.best ? match.best.score : 0,
+                options: match.options.map(option => ({
+                    title: option.item.Title,
+                    score: option.score
+                }))
+            }))
+        }));
+        window.location.href = "beo-learning-example.html?source=analyzer";
     } catch (error) {
         console.error("BEO analysis failed", error);
         beoStatus.textContent = "Analysis could not finish";
@@ -84,6 +83,32 @@ async function loadMenu() {
     menuItems = await response.json();
 
     renderLibrary([]);
+
+    const confirmedTitles = JSON.parse(sessionStorage.getItem("beoReviewConfirmedItems") || "[]");
+
+    if (confirmedTitles.length) {
+
+        confirmedTitles.forEach(title => {
+
+            const item = menuItems.find(menuItem => menuItem.Title === title);
+
+            if (item && !buffetItems.some(existing => existing.Title === item.Title)) {
+
+                buffetItems.push(item);
+
+            }
+
+        });
+
+        sessionStorage.removeItem("beoReviewConfirmedItems");
+
+        renderCurrentBuffet();
+
+        beoStatus.textContent = `${buffetItems.length} reviewed Menu Library items added`;
+
+        showBEOResult("Confirmed BEO items were added to the current buffet. Review them below, then generate menu cards when ready.");
+
+    }
 
 }
 

@@ -14,6 +14,8 @@
         "Assorted Breakfast Pastries": ["Breakfast Pastries"],
         "Assorted Danish Pastries": ["Assorted Danish Pastries (dz)"],
         "Carne Asada Breakfast Burrito": ["Breakfast Burrito - Carne Asada"],
+        "Grated Cheddar Cheese": ["Grated Cheese"],
+        "Warm Flour Tortillas": ["Flour Tortillas"],
         "Vegetarian Breakfast Burrito": ["Breakfast Burrito No Meat"],
         "Schreiner's Southwest Turkey Sausage": ["Turkey Sausage"],
         "Pesto Chicken": ["Pesto Grilled Chicken Breast"]
@@ -70,7 +72,16 @@
     function aliasesForItem(item) {
         const itemAliases = Array.isArray(item.BEOAliases) ? item.BEOAliases : [];
         const builtInAliases = BEO_TITLE_ALIASES[item.Title] || [];
-        return [...itemAliases, ...builtInAliases];
+        let learnedAliases = [];
+        try {
+            const rules = root.localStorage ? JSON.parse(root.localStorage.getItem("beoMatchingRules") || "{}") : {};
+            learnedAliases = Object.entries(rules)
+                .filter(([, title]) => title === item.Title)
+                .map(([phrase]) => phrase);
+        } catch (error) {
+            learnedAliases = [];
+        }
+        return [...itemAliases, ...builtInAliases, ...learnedAliases];
     }
 
     function scoreCandidate(candidate, item) {
@@ -106,7 +117,15 @@
     }
 
     function isUsefulMenuLine(line) {
+        let ignored = false;
+        try {
+            const ignoreRules = root.localStorage ? JSON.parse(root.localStorage.getItem("beoIgnoreRules") || "[]") : [];
+            ignored = ignoreRules.some(phrase => normalize(phrase) === normalize(line));
+        } catch (error) {
+            ignored = false;
+        }
         return line.length >= 3 &&
+            !ignored &&
             !PAGE_FOOTER.test(line) &&
             !METADATA.test(line) &&
             !HEADING.test(line) &&
@@ -130,6 +149,11 @@
             if (!inMenu) return;
             if (MENU_END.test(line.replace(/^~+|~+$/g, "").trim())) { inMenu = false; return; }
             if (HEADING.test(line)) {
+                const heading = line.replace(/[~*]/g, "").trim();
+                const previous = candidates[candidates.length - 1];
+                if (/^salad$/i.test(heading) && previous && /^south\s+of\s+the\s+border$/i.test(previous.text)) {
+                    previous.text = `${previous.text} Salad`;
+                }
                 section = line.replace(/[~*]/g, "").trim() || section;
                 return;
             }
@@ -186,7 +210,7 @@
             const best = options[0] || null;
             const runnerUp = options[1] || null;
             const gap = best ? best.score - (runnerUp ? runnerUp.score : 0) : 0;
-            const matched = Boolean(best && best.score >= 84 && gap >= 10);
+            const matched = Boolean(best && best.score >= 84 && (gap >= 10 || best.score >= 98));
             return { ...candidate, options, best, gap, matched };
         });
     }
