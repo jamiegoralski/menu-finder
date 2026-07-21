@@ -13,8 +13,12 @@
     const BEO_TITLE_ALIASES = {
         "Assorted Breakfast Pastries": ["Breakfast Pastries"],
         "Assorted Danish Pastries": ["Assorted Danish Pastries (dz)"],
+        "Assorted Rolls": ["Assorfed Rolls"],
         "Carne Asada Breakfast Burrito": ["Breakfast Burrito - Carne Asada"],
+        "Croutons": ["Homemade Croutons", "Homemade Croutions"],
         "Grated Cheddar Cheese": ["Grated Cheese"],
+        "Parmesan Cheese": ["Shaved Parmesan"],
+        "Butter ": ["Butter"],
         "Warm Flour Tortillas": ["Flour Tortillas"],
         "Vegetarian Breakfast Burrito": ["Breakfast Burrito No Meat"],
         "Schreiner's Southwest Turkey Sausage": ["Turkey Sausage"],
