@@ -21,7 +21,7 @@ async function renderDetails() {
     return;
   }
   document.title = `${item.Title} | Aventura Menu Studio`;
-  const storedIngredients = Array.isArray(item.Ingredients) ? item.Ingredients : String(item.Ingredients || "").split("|").map(value => value.trim()).filter(Boolean);
+  const storedIngredients = Array.isArray(item.Ingredients) ? item.Ingredients : String(item.Ingredients || "").split(",").map(value => value.trim()).filter(Boolean);
   const ingredients = storedIngredients.length ? storedIngredients : (demoIngredients[item.Title] || []);
   const isDemo = !storedIngredients.length && ingredients.length > 0;
   const tags = [item.Vegan&&"Vegan-Friendly",item.Vegetarian&&"Vegetarian-Friendly",item.GlutenFriendly&&"Gluten-Friendly",item.DairyFriendly&&"Dairy-Friendly"].filter(Boolean);
