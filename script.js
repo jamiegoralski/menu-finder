@@ -197,7 +197,7 @@ if (item.The9Allergens) {
 
             <div class="menu-item">
 
-                <h3><a class="menu-item-link" href="menu-item.html?item=${encodeURIComponent(item.Title || "")}">${item.Title || ""}</a></h3>
+                <h3>${item.Title || ""}</h3>
 
                 <p>${item.MenuDescription || ""}</p>
 
@@ -236,11 +236,6 @@ if (item.The9Allergens) {
                 ${allergenHTML}
 
 <div class="card-actions">
-
-    <a class="details-btn" href="menu-item.html?item=${encodeURIComponent(item.Title || "")}">
-        <i class="fa-solid fa-list"></i>
-        <span>View Details</span>
-    </a>
 
     <button
     class="favorite-btn ${favorites.includes(item.Title) ? "active" : ""}"
