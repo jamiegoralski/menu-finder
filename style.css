@@ -1343,6 +1343,8 @@ body{
     background:#fff;
     color:var(--studio-ink);
 }
+.menu-item-link{color:inherit;text-decoration:none}.menu-item-link:hover{color:var(--studio-blue)}
+.details-btn{height:44px;display:flex;align-items:center;gap:8px;padding:0 15px;border:1px solid var(--studio-blue);border-radius:12px;background:var(--studio-blue-soft);color:var(--studio-blue);font-size:14px;font-weight:700;text-decoration:none}.details-btn:hover{background:var(--studio-blue);color:#fff}
 .copy-card-btn:hover,.favorite-btn:hover{border-color:var(--studio-blue);background:var(--studio-blue-soft);color:var(--studio-blue)}
 .card-actions{border-bottom-color:var(--studio-line)}
 
