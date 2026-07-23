@@ -250,6 +250,36 @@
         });
     }
 
+    function reconstructPdfLines(items) {
+        const rows = [];
+        items.forEach(item => {
+            const text = String(item.str || "").trim();
+            if (!text) return;
+            const x = Number(item.transform && item.transform[4]) || 0;
+            const y = Number(item.transform && item.transform[5]) || 0;
+            let row = rows.find(entry => Math.abs(entry.y - y) <= 2);
+            if (!row) {
+                row = { y, parts: [] };
+                rows.push(row);
+            }
+            row.parts.push({ x, text });
+        });
+        return rows
+            .sort((left, right) => right.y - left.y)
+            .map(row => row.parts.sort((left, right) => left.x - right.x).map(part => part.text).join(" ").replace(/\s+/g, " ").trim())
+            .filter(Boolean)
+            .join("\n");
+    }
+
+    function hasUsableMenuStructure(text, pageCount) {
+        const lines = String(text || "").split("\n").map(line => line.trim()).filter(Boolean);
+        const menuIndex = lines.findIndex(line => MENU_START.test(line));
+        if (menuIndex < 0 || lines.length < Math.max(8, pageCount * 4)) return false;
+        const menuLines = lines.slice(menuIndex + 1);
+        const standaloneHeadings = menuLines.filter(line => HEADING.test(line)).length;
+        return standaloneHeadings > 0 && menuLines.some(line => isUsefulMenuLine(line));
+    }
+
     async function extractPdfText(file, onProgress) {
         const buffer = await file.arrayBuffer();
         const pdf = await root.pdfjsLib.getDocument({ data: buffer }).promise;
@@ -258,10 +288,10 @@
             onProgress(`Reading page ${number} of ${pdf.numPages}…`);
             const page = await pdf.getPage(number);
             const content = await page.getTextContent();
-            nativePages.push(content.items.map(item => item.str).join(" ").trim());
+            nativePages.push(reconstructPdfLines(content.items));
         }
         const nativeText = nativePages.join("\n");
-        if (nativeText.replace(/\s/g, "").length > 80) {
+        if (nativeText.replace(/\s/g, "").length > 80 && hasUsableMenuStructure(nativeText, pdf.numPages)) {
             return { text: nativeText, source: "embedded PDF text", pages: pdf.numPages };
         }
         if (!root.Tesseract) throw new Error("OCR could not start. Check your internet connection and reload the page.");
@@ -280,6 +310,6 @@
         return { text: ocrPages.join("\n"), source: "high-resolution OCR", pages: pdf.numPages };
     }
 
-    root.BEOImporter = { extractPdfText, parseBEO, rankMatches, normalize, scoreCandidate, expandCompoundCandidates };
+    root.BEOImporter = { extractPdfText, parseBEO, rankMatches, normalize, scoreCandidate, expandCompoundCandidates, reconstructPdfLines, hasUsableMenuStructure };
     if (typeof module !== "undefined") module.exports = root.BEOImporter;
 })(typeof window !== "undefined" ? window : globalThis);
