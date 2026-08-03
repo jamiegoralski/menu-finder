@@ -8,8 +8,11 @@
     const METADATA = /^(customer|event\s+(information|date|number|group|manager)|location|service\s+type|set\s*up|guest\s+count|sales\s+person|phone|email|company|contract|special\s+instructions?|dietary\s+codes?|number\s+of\s+buffets?)\b/i;
     const NON_CATALOG = /^(vegan|vegetarian|gluten\s*free|no\s+garlic|no\s+onion|no\s+tomato).{0,70}(meal|bread|empanada)/i;
     const ORDER_SHEET_NON_CATALOG = /^fresh\s+fruit\s+cup\b/i;
-    const HEADING = /^(~+|\*{2,})|^(salad|entree|dessert|beverages?\s+on\s+consumption|hot\s+beverage|condiments)\b/i;
+    const HEADING = /^(~+|\*{2,})|^(salad|entree|dessert|beverages?|hot\s+beverages?|condiments)\b/i;
     const DESCRIPTION = /^(with\b|\*\*|\d+\)|prepared\b|served\b)/i;
+    const NON_MENU_SECTION = /^(beverages?|hot\s+beverages?|condiments)\b/i;
+    const OPERATIONAL_MENU_LINE = /^(?:beverage\s+station|coffee\s+condiments?|condiments?\s*:|power\s+bars?\b|disposable\s+cups?\b|stir\s+sticks?\b|disposable\s+napkins?\b)/i;
+    const PACKAGE_CHOICE_PREFIX = /^(?:one\s+egg|two\s+proteins?|one\s+griddle\s+item|one\s+side)\s*:\s*/i;
     const BEO_TITLE_ALIASES = {
         "Assorted Breakfast Pastries": ["Breakfast Pastries"],
         "Assorted Danish Pastries": ["Assorted Danish Pastries (dz)"],
@@ -171,10 +174,12 @@
                 return;
             }
             const parsed = splitQuantity(line);
+            parsed.text = parsed.text.replace(PACKAGE_CHOICE_PREFIX, "").trim();
             if (/\bbuffet\b/i.test(parsed.text)) {
                 packageContext = parsed.text;
                 return;
             }
+            if (NON_MENU_SECTION.test(section) || OPERATIONAL_MENU_LINE.test(parsed.text)) return;
             if (!isUsefulMenuLine(parsed.text)) return;
             const wrappedItems = [
                 { continuation: /^tomatoes?$/i, suffix: /\bcherry$/i, title: "Cherry Tomatoes" },
