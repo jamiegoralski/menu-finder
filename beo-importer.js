@@ -30,6 +30,7 @@
         "Shredded Carrots": ["Shredded Carrot"],
         "Sliced Black Olives": ["Sliced Black Olive"],
         "Sliced Cucumbers ": ["Sliced Cucumber"],
+        "South of The Border Salad": ["Romaine Hearts, Tomatoes, Roasted Corn, Black Beans"],
         "Butter ": ["Butter"],
         "Warm Flour Tortillas": ["Flour Tortillas"],
         "Vegetarian Breakfast Burrito": ["Breakfast Burrito No Meat"],
