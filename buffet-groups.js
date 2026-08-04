@@ -22,6 +22,7 @@ const beoResult = document.getElementById("beoResult");
 let savedBuffets = [];
 let selectedBEOFile = null;
 let beoMatches = [];
+let beoAnalysisRunning = false;
 
 function showBEOResult(message) {
     beoResult.hidden = false;
@@ -37,8 +38,10 @@ beoUpload.addEventListener("change", event => {
 });
 
 analyzeEventButton.addEventListener("click", async () => {
-    if (!selectedBEOFile || !menuItems.length) return;
+    if (!selectedBEOFile || !menuItems.length || beoAnalysisRunning) return;
+    beoAnalysisRunning = true;
     analyzeEventButton.disabled = true;
+    beoUpload.disabled = true;
     beoResult.hidden = true;
     try {
         beoStatus.textContent = "Preparing PDF…";
@@ -71,6 +74,8 @@ analyzeEventButton.addEventListener("click", async () => {
         beoStatus.textContent = "Analysis could not finish";
         showBEOResult(error.message || "Please retry the upload.");
     } finally {
+        beoAnalysisRunning = false;
+        beoUpload.disabled = false;
         analyzeEventButton.disabled = false;
     }
 });

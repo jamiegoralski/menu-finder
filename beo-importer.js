@@ -288,32 +288,64 @@
 
     async function extractPdfText(file, onProgress) {
         const buffer = await file.arrayBuffer();
-        const pdf = await root.pdfjsLib.getDocument({ data: buffer }).promise;
-        const nativePages = [];
-        for (let number = 1; number <= pdf.numPages; number++) {
-            onProgress(`Reading page ${number} of ${pdf.numPages}…`);
-            const page = await pdf.getPage(number);
-            const content = await page.getTextContent();
-            nativePages.push(reconstructPdfLines(content.items));
+        const loadingTask = root.pdfjsLib.getDocument({ data: buffer });
+        let pdf;
+        let ocrWorker;
+        try {
+            pdf = await loadingTask.promise;
+            const pageCount = pdf.numPages;
+            const nativePages = [];
+            for (let number = 1; number <= pageCount; number++) {
+                onProgress(`Reading page ${number} of ${pageCount}…`);
+                const page = await pdf.getPage(number);
+                try {
+                    const content = await page.getTextContent();
+                    nativePages.push(reconstructPdfLines(content.items));
+                } finally {
+                    page.cleanup();
+                }
+            }
+            const nativeText = nativePages.join("\n");
+            if (nativeText.replace(/\s/g, "").length > 80 && hasUsableMenuStructure(nativeText, pageCount)) {
+                return { text: nativeText, source: "embedded PDF text", pages: pageCount };
+            }
+            if (!root.Tesseract) throw new Error("OCR could not start. Check your internet connection and reload the page.");
+
+            onProgress("Starting OCR…");
+            ocrWorker = await root.Tesseract.createWorker("eng", 1, { logger: () => {} });
+            const ocrPages = [];
+            const maxCanvasPixels = 12000000;
+            for (let number = 1; number <= pageCount; number++) {
+                onProgress(`OCR scanning page ${number} of ${pageCount}…`);
+                const page = await pdf.getPage(number);
+                let canvas;
+                try {
+                    const baseViewport = page.getViewport({ scale: 1 });
+                    const safeScale = Math.min(2.5, Math.sqrt(maxCanvasPixels / (baseViewport.width * baseViewport.height)));
+                    const viewport = page.getViewport({ scale: safeScale });
+                    canvas = document.createElement("canvas");
+                    canvas.width = Math.ceil(viewport.width);
+                    canvas.height = Math.ceil(viewport.height);
+                    const context = canvas.getContext("2d", { willReadFrequently: true });
+                    await page.render({ canvasContext: context, viewport }).promise;
+                    const result = await ocrWorker.recognize(canvas);
+                    ocrPages.push(result.data.text);
+                } finally {
+                    page.cleanup();
+                    if (canvas) {
+                        canvas.width = 1;
+                        canvas.height = 1;
+                        canvas.remove();
+                    }
+                }
+            }
+            return { text: ocrPages.join("\n"), source: "high-resolution OCR", pages: pageCount };
+        } finally {
+            const cleanupTasks = [];
+            if (ocrWorker) cleanupTasks.push(ocrWorker.terminate());
+            cleanupTasks.push(pdf ? pdf.destroy() : loadingTask.destroy());
+            await Promise.allSettled(cleanupTasks);
         }
-        const nativeText = nativePages.join("\n");
-        if (nativeText.replace(/\s/g, "").length > 80 && hasUsableMenuStructure(nativeText, pdf.numPages)) {
-            return { text: nativeText, source: "embedded PDF text", pages: pdf.numPages };
-        }
-        if (!root.Tesseract) throw new Error("OCR could not start. Check your internet connection and reload the page.");
-        const ocrPages = [];
-        for (let number = 1; number <= pdf.numPages; number++) {
-            onProgress(`OCR scanning page ${number} of ${pdf.numPages}…`);
-            const page = await pdf.getPage(number);
-            const viewport = page.getViewport({ scale: 2.5 });
-            const canvas = document.createElement("canvas");
-            canvas.width = Math.ceil(viewport.width);
-            canvas.height = Math.ceil(viewport.height);
-            await page.render({ canvasContext: canvas.getContext("2d", { willReadFrequently: true }), viewport }).promise;
-            const result = await root.Tesseract.recognize(canvas, "eng", { logger: () => {} });
-            ocrPages.push(result.data.text);
-        }
-        return { text: ocrPages.join("\n"), source: "high-resolution OCR", pages: pdf.numPages };
     }
 
     root.BEOImporter = { extractPdfText, parseBEO, rankMatches, normalize, scoreCandidate, expandCompoundCandidates, reconstructPdfLines, hasUsableMenuStructure };
