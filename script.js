@@ -18,6 +18,8 @@ window.menuData = menuData;
 const sortDropdown = document.getElementById("sortDropdown");
 
 let currentSort = "az";
+const RESULTS_PAGE_SIZE = 40;
+let visibleResultLimit = RESULTS_PAGE_SIZE;
 
     const activeFilters = document.getElementById("activeFilters");
     const resultCount = document.getElementById("resultCount");
@@ -132,10 +134,12 @@ function display(items) {
 
 }
 
-    resultCount.textContent =
-    `Showing ${items.length} of ${menuData.length} Menu Items`;
+    const visibleItems = items.slice(0, visibleResultLimit);
 
-    results.innerHTML = items.map(item => {
+    resultCount.textContent =
+    `Showing ${visibleItems.length} of ${items.length} Matching Menu Items`;
+
+    results.innerHTML = visibleItems.map(item => {
 
         let allergenHTML = "";
 
@@ -263,7 +267,14 @@ if (item.The9Allergens) {
 
         `;
 
-    }).join("");
+    }).join("") + (visibleItems.length < items.length ? `
+        <div class="load-more-row">
+            <button id="loadMoreResults" class="load-more-btn" type="button">
+                Load More
+            </button>
+            <span>${items.length - visibleItems.length} more menu items</span>
+        </div>
+    ` : "");
 
 // Copy Card Buttons
 document.querySelectorAll(".copy-card-btn").forEach(button => {
@@ -385,9 +396,21 @@ applyFilters();
 
 });
 
+const loadMoreButton = document.getElementById("loadMoreResults");
+if (loadMoreButton) {
+    loadMoreButton.addEventListener("click", () => {
+        visibleResultLimit += RESULTS_PAGE_SIZE;
+        display(items);
+    });
 }
 
-function applyFilters() {
+}
+
+function applyFilters(resetVisibleResults = true) {
+
+    if (resetVisibleResults) {
+        visibleResultLimit = RESULTS_PAGE_SIZE;
+    }
 
     const search = searchInput.value.toLowerCase().trim();
 
