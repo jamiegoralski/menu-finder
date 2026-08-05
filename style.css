@@ -209,17 +209,17 @@ h1 {
 .load-more-btn {
     min-width: 150px;
     padding: 12px 22px;
-    border: 1px solid var(--studio-blue, #0076a3);
+    border: 1px solid #111;
     border-radius: 10px;
     background: #fff;
-    color: var(--studio-blue, #0076a3);
+    color: #111;
     font: inherit;
     font-weight: 700;
     cursor: pointer;
 }
 
 .load-more-btn:hover {
-    background: var(--studio-blue, #0076a3);
+    background: #111;
     color: #fff;
 }
 
