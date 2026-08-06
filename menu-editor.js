@@ -461,7 +461,7 @@ async function exportPDF() {
             await document.fonts.ready;
         }
 
-        // Keep the existing 4x print quality, but render each unique card only once.
+        // Render each unique card once at 5x for sharper print output.
         const renderedCards = [];
         for (let cardIndex = 0; cardIndex < cards.length; cardIndex++) {
             downloadPdfButton.innerHTML = `
@@ -475,7 +475,7 @@ async function exportPDF() {
             await waitForPreviewPaint();
 
             const canvas = await html2canvas(preview, {
-                scale: 4,
+                scale: 5,
                 useCORS: true,
                 backgroundColor: "#ffffff",
                 logging: false

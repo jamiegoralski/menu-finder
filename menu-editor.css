@@ -471,7 +471,7 @@ textarea{
 
     display:grid;
 
-    gap:.065in;
+    gap:.08in;
 
     margin-top:.13in;
 
@@ -485,7 +485,7 @@ textarea{
 
     align-items:baseline;
 
-    gap:.065in;
+    gap:.08in;
 
 }
 
@@ -511,9 +511,11 @@ textarea{
 
     font-weight:600;
 
-    line-height:1.25;
+    line-height:1.35;
 
-    letter-spacing:-.12px;
+    letter-spacing:.08px;
+
+    word-spacing:.65px;
 
     white-space:nowrap;
 
