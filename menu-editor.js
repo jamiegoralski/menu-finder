@@ -415,111 +415,123 @@ function updatePreview() {
 
 }
 
-document
-    .getElementById("downloadPdf")
-    .addEventListener("click", exportPDF);
+const downloadPdfButton = document.getElementById("downloadPdf");
+downloadPdfButton.addEventListener("click", exportPDF);
+
+function waitForPreviewPaint() {
+    return new Promise(resolve => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
+}
 
 async function exportPDF() {
-    
+    if (!cards.length) return;
+
     const previousCard = currentCard;
-const previousIndex = currentIndex;
-
+    const previousIndex = currentIndex;
+    const originalButtonContent = downloadPdfButton.innerHTML;
     const { jsPDF } = window.jspdf;
-
     const pdf = new jsPDF({
         orientation: "portrait",
         unit: "in",
         format: "letter"
     });
+    const preview = document.getElementById("previewCard");
+    const copies = parseInt(document.getElementById("copyCount").value) || 1;
+    const exportCards = [];
 
-    const preview =
-        document.getElementById("previewCard");
-
-    const copies = parseInt(
-    document.getElementById("copyCount").value
-) || 1;
-
-const exportCards = [];
-
-cards.forEach(card => {
-
-    for (let i = 0; i < copies; i++) {
-
-        exportCards.push(card);
-
-    }
-
-});
+    cards.forEach((card, cardIndex) => {
+        for (let copyIndex = 0; copyIndex < copies; copyIndex++) {
+            exportCards.push({ card, cardIndex });
+        }
+    });
 
     const positions = [
+        { x: 0.22, y: 0.12 },
+        { x: 4.27, y: 0.12 },
+        { x: 0.22, y: 5.52 },
+        { x: 4.27, y: 5.52 }
+    ];
 
-    { x: 0.22, y: 0.12 },
-    { x: 4.27, y: 0.12 },
+    downloadPdfButton.disabled = true;
+    downloadPdfButton.setAttribute("aria-busy", "true");
 
-    { x: 0.22, y: 5.52 },
-    { x: 4.27, y: 5.52 }
-
-];
-
-    for(let i = 0; i < exportCards.length; i++){
-
-        currentCard = exportCards[i];
-
-        updatePreview();
-
-        await new Promise(r => setTimeout(r,40));
-
-        const canvas = await html2canvas(preview,{
-
-    scale:4,
-
-    useCORS:true,
-
-    backgroundColor:"#ffffff",
-
-    logging:false
-
-});
-
-        const img = canvas.toDataURL("image/png");
-
-        const pos = positions[i % 4];
-
-        pdf.addImage(
-    img,
-    "PNG",
-    pos.x,
-    pos.y,
-    4.05,
-    5.40,
-    undefined,
-    "FAST"
-);
-
-        // Draw a crisp, subtle cut line around each touching card.
-pdf.setDrawColor(112, 146, 162);
-pdf.setLineWidth(0.01);
-
-pdf.rect(
-    pos.x,
-    pos.y,
-    4.05,
-    5.40
-);
-
-        if((i + 1) % 4 === 0 && i < exportCards.length - 1){
-            pdf.addPage();
+    try {
+        if (document.fonts && document.fonts.ready) {
+            await document.fonts.ready;
         }
 
+        // Keep the existing 4x print quality, but render each unique card only once.
+        const renderedCards = [];
+        for (let cardIndex = 0; cardIndex < cards.length; cardIndex++) {
+            downloadPdfButton.innerHTML = `
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Preparing card ${cardIndex + 1} of ${cards.length}
+            `;
+
+            currentCard = cards[cardIndex];
+            currentIndex = cardIndex;
+            updatePreview();
+            await waitForPreviewPaint();
+
+            const canvas = await html2canvas(preview, {
+                scale: 4,
+                useCORS: true,
+                backgroundColor: "#ffffff",
+                logging: false
+            });
+
+            renderedCards.push(canvas.toDataURL("image/png"));
+
+            // Release the large canvas after encoding to keep browser memory stable.
+            canvas.width = 1;
+            canvas.height = 1;
+            canvas.remove();
+        }
+
+        downloadPdfButton.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Building PDF…
+        `;
+
+        for (let index = 0; index < exportCards.length; index++) {
+            const renderedCard = renderedCards[exportCards[index].cardIndex];
+            const pos = positions[index % 4];
+
+            pdf.addImage(
+                renderedCard,
+                "PNG",
+                pos.x,
+                pos.y,
+                4.05,
+                5.40,
+                undefined,
+                "FAST"
+            );
+
+            // Draw a crisp, subtle cut line around each touching card.
+            pdf.setDrawColor(112, 146, 162);
+            pdf.setLineWidth(0.01);
+            pdf.rect(pos.x, pos.y, 4.05, 5.40);
+
+            if ((index + 1) % 4 === 0 && index < exportCards.length - 1) {
+                pdf.addPage();
+            }
+        }
+
+        pdf.save("Menu Cards.pdf");
+    } catch (error) {
+        console.error("Menu card PDF export failed", error);
+        alert("The PDF could not be created. Please try again.");
+    } finally {
+        currentCard = previousCard;
+        currentIndex = previousIndex;
+        updatePreview();
+
+        downloadPdfButton.disabled = false;
+        downloadPdfButton.removeAttribute("aria-busy");
+        downloadPdfButton.innerHTML = originalButtonContent;
     }
-
-    pdf.save("Menu Cards.pdf");
-
-currentCard = previousCard;
-currentIndex = previousIndex;
-
-updatePreview();
-
 }
 
 // ==============================
