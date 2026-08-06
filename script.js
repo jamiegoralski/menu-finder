@@ -7,6 +7,7 @@ window.menuData = menuData;
 
     const searchInput = document.getElementById("search");
     const results = document.getElementById("results");
+    const smartSearchSummary = document.getElementById("smartSearchSummary");
 
     const dietaryDropdownButton = document.getElementById("dietaryDropdownButton");
     const mealDropdownButton = document.getElementById("mealDropdownButton");
@@ -20,6 +21,138 @@ const sortDropdown = document.getElementById("sortDropdown");
 let currentSort = "az";
 const RESULTS_PAGE_SIZE = 40;
 let visibleResultLimit = RESULTS_PAGE_SIZE;
+let searchTimer;
+
+const SMART_SYNONYMS = {
+    bread: ["bread", "roll", "rolls", "baguette", "brioche", "tortilla"],
+    rolls: ["roll", "rolls", "bread"],
+    pastry: ["pastry", "pastries", "danish", "croissant", "muffin"],
+    pastries: ["pastry", "pastries", "danish", "croissant", "muffin"],
+    dressing: ["dressing", "vinaigrette", "ranch", "sauce"],
+    sauce: ["sauce", "dressing", "vinaigrette", "reduction"],
+    entree: ["entree", "main", "protein"],
+    dessert: ["dessert", "cake", "cookie", "cookies", "brownie", "tart"],
+    veggies: ["vegetable", "vegetables", "broccoli", "carrot", "asparagus", "greens"],
+    vegetables: ["vegetable", "vegetables", "broccoli", "carrot", "asparagus", "greens"]
+};
+
+const SMART_FILTERS = [
+    { key: "Vegan", label: "Vegan", patterns: [/\bvegan\b/i, /\bplant[ -]?based\b/i] },
+    { key: "Vegetarian", label: "Vegetarian", patterns: [/\bvegetarian\b/i] },
+    { key: "GlutenFriendly", label: "Gluten-Friendly", patterns: [/\bgluten[ -]?(?:friendly|free)\b/i, /\bgf\b/i] },
+    { key: "DairyFriendly", label: "Dairy-Friendly", patterns: [/\bdairy[ -]?(?:friendly|free)\b/i, /\bno dairy\b/i, /\bwithout dairy\b/i] },
+    { key: "BreakfastItem", label: "Breakfast", patterns: [/\bbreakfast\b/i] },
+    { key: "Lunch_x002f_DinnerItem", label: "Lunch / Dinner", patterns: [/\blunch\b/i, /\bdinner\b/i] },
+    { key: "Horsdoeuvre", label: "Hors d'oeuvre", patterns: [/\bhors d['’]?oeuvres?\b/i, /\bappetizers?\b/i] },
+    { key: "DessertItem", label: "Dessert", patterns: [/\bdesserts?\b/i] },
+    { key: "DressingItem", label: "Dressing / Sauce", patterns: [/\bsalad dressings?\b/i] }
+];
+
+function normalizeSmartText(value) {
+    return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+}
+
+function editDistance(left, right) {
+    if (left === right) return 0;
+    const previous = Array.from({ length: right.length + 1 }, (_, index) => index);
+    for (let row = 1; row <= left.length; row++) {
+        let diagonal = previous[0];
+        previous[0] = row;
+        for (let column = 1; column <= right.length; column++) {
+            const above = previous[column];
+            previous[column] = Math.min(
+                previous[column] + 1,
+                previous[column - 1] + 1,
+                diagonal + (left[row - 1] === right[column - 1] ? 0 : 1)
+            );
+            diagonal = above;
+        }
+    }
+    return previous[right.length];
+}
+
+function parseSmartQuery(rawQuery) {
+    let remaining = String(rawQuery || "");
+    const filters = [];
+    SMART_FILTERS.forEach(filter => {
+        let found = false;
+        filter.patterns.forEach(pattern => {
+            if (pattern.test(remaining)) {
+                found = true;
+                remaining = remaining.replace(pattern, " ");
+            }
+        });
+        if (found) filters.push(filter);
+    });
+
+    const normalizedQuery = normalizeSmartText(remaining);
+    const terms = normalizedQuery.split(" ").filter(Boolean);
+    const concepts = terms.map(term => SMART_SYNONYMS[term] || [term]);
+    return { raw: String(rawQuery || "").trim(), normalizedQuery, terms, concepts, filters };
+}
+
+function fuzzyTokenMatch(term, words) {
+    if (term.length < 4) return false;
+    const tolerance = term.length >= 8 ? 2 : 1;
+    return words.some(word => Math.abs(word.length - term.length) <= tolerance && editDistance(term, word) <= tolerance);
+}
+
+function scoreSmartMatch(item, query) {
+    if (!query.filters.every(filter => item[filter.key] === true)) return null;
+    if (!query.concepts.length) return 0;
+
+    const title = normalizeSmartText(item.Title);
+    const description = normalizeSmartText(item.MenuDescription);
+    const lifestyle = normalizeSmartText(item.Lifestyle);
+    const allergens = normalizeSmartText(item.The9Allergens);
+    const searchable = `${title} ${description} ${lifestyle} ${allergens}`.trim();
+    const words = searchable.split(" ").filter(Boolean);
+    let score = title.includes(query.normalizedQuery) ? 500 : 0;
+
+    for (const alternatives of query.concepts) {
+        let conceptScore = 0;
+        alternatives.forEach(alternative => {
+            if (title === alternative) conceptScore = Math.max(conceptScore, 180);
+            else if (title.includes(alternative)) conceptScore = Math.max(conceptScore, 120);
+            else if (description.includes(alternative)) conceptScore = Math.max(conceptScore, 60);
+            else if (lifestyle.includes(alternative)) conceptScore = Math.max(conceptScore, 35);
+            else if (allergens.includes(alternative)) conceptScore = Math.max(conceptScore, 20);
+            else if (fuzzyTokenMatch(alternative, words)) conceptScore = Math.max(conceptScore, 30);
+        });
+        if (!conceptScore) return null;
+        score += conceptScore;
+    }
+    return score;
+}
+
+function showSmartInterpretation(query) {
+    smartSearchSummary.innerHTML = "";
+    if (!query.raw || (!query.filters.length && !query.terms.some(term => SMART_SYNONYMS[term]))) return;
+
+    const label = document.createElement("span");
+    label.className = "smart-search-label";
+    label.textContent = "Smart search understood:";
+    smartSearchSummary.appendChild(label);
+
+    query.filters.forEach(filter => {
+        const chip = document.createElement("span");
+        chip.className = "smart-search-chip";
+        chip.textContent = filter.label;
+        smartSearchSummary.appendChild(chip);
+    });
+
+    query.terms.filter(term => SMART_SYNONYMS[term]).forEach(term => {
+        const chip = document.createElement("span");
+        chip.className = "smart-search-chip synonym-chip";
+        chip.textContent = `${term} + related items`;
+        smartSearchSummary.appendChild(chip);
+    });
+}
 
     const activeFilters = document.getElementById("activeFilters");
     const resultCount = document.getElementById("resultCount");
@@ -412,19 +545,12 @@ function applyFilters(resetVisibleResults = true) {
         visibleResultLimit = RESULTS_PAGE_SIZE;
     }
 
-    const search = searchInput.value.toLowerCase().trim();
+    const smartQuery = parseSmartQuery(searchInput.value);
+    showSmartInterpretation(smartQuery);
 
-    const filtered = menuData.filter(item => {
+    const filtered = menuData.map(item => {
 
-        const matchesSearch =
-
-            (item.Title || "").toLowerCase().includes(search) ||
-
-            (item.MenuDescription || "").toLowerCase().includes(search) ||
-
-            (item.Lifestyle || "").toLowerCase().includes(search) ||
-
-            (item.The9Allergens || "").toLowerCase().includes(search);
+        const smartScore = scoreSmartMatch(item, smartQuery);
 
         const matchesDietary =
 
@@ -436,20 +562,28 @@ function applyFilters(resetVisibleResults = true) {
 const matchesFavorites =
     !favoritesOnly || favorites.includes(item.Title);
 
-return (
-    matchesSearch &&
+if (
+    smartScore !== null &&
     matchesDietary &&
     matchesMeal &&
     matchesFavorites
-);
+) return { item, smartScore };
 
-    });
+return null;
+
+    }).filter(Boolean);
 
     // Sort Results
-if (currentSort === "az") {
+if (smartQuery.raw) {
 
     filtered.sort((a, b) =>
-        (a.Title || "").localeCompare(b.Title || "")
+        b.smartScore - a.smartScore || (a.item.Title || "").localeCompare(b.item.Title || "")
+    );
+
+} else if (currentSort === "az") {
+
+    filtered.sort((a, b) =>
+        (a.item.Title || "").localeCompare(b.item.Title || "")
     );
 
 }
@@ -457,12 +591,12 @@ if (currentSort === "az") {
 if (currentSort === "za") {
 
     filtered.sort((a, b) =>
-        (b.Title || "").localeCompare(a.Title || "")
+        (b.item.Title || "").localeCompare(a.item.Title || "")
     );
 
 }
 
-display(filtered);
+display(filtered.map(result => result.item));
 
 }
 
@@ -470,8 +604,11 @@ applyFilters();
 updateActiveFilters();
 
 searchInput.addEventListener("input", () => {
-    applyFilters();
-    updateActiveFilters();
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+        applyFilters();
+        updateActiveFilters();
+    }, 140);
 });
 
 function updateSelections(checkboxes, selectedArray){

@@ -49,6 +49,41 @@ h1 {
     margin-bottom: 35px;
 }
 
+.smart-search-summary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 0;
+    margin-top: 10px;
+}
+
+.smart-search-summary:empty {
+    display: none;
+}
+
+.smart-search-label {
+    color: var(--studio-muted, #66757c);
+    font-size: .82rem;
+    font-weight: 600;
+}
+
+.smart-search-chip {
+    padding: 5px 9px;
+    border: 1px solid #b9d6e2;
+    border-radius: 999px;
+    background: #eef8fc;
+    color: #005f86;
+    font-size: .78rem;
+    font-weight: 700;
+}
+
+.synonym-chip {
+    border-color: #d7dce0;
+    background: #f6f7f8;
+    color: #27343a;
+}
+
 #search {
     width: 100%;
     padding: 22px 28px;
