@@ -482,37 +482,63 @@ async function exportPDF() {
             Building PDF…
         `;
 
-        const pageCount = Math.ceil(cards.length / 4);
-
-        // Keep identical pages adjacent so printed sheets can be stacked and cut
-        // without sorting individual menu cards afterward.
-        for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
+        if (cards.length === 1) {
+            // Fill each sheet before starting another when only one card is selected.
             for (let copyIndex = 0; copyIndex < copies; copyIndex++) {
-                if (pageIndex > 0 || copyIndex > 0) {
+                if (copyIndex > 0 && copyIndex % 4 === 0) {
                     pdf.addPage();
                 }
 
-                const firstCardIndex = pageIndex * 4;
-                const lastCardIndex = Math.min(firstCardIndex + 4, cards.length);
+                const pos = positions[copyIndex % 4];
 
-                for (let cardIndex = firstCardIndex; cardIndex < lastCardIndex; cardIndex++) {
-                    const pos = positions[cardIndex - firstCardIndex];
+                pdf.addImage(
+                    renderedCards[0],
+                    "PNG",
+                    pos.x,
+                    pos.y,
+                    4.05,
+                    5.40,
+                    undefined,
+                    "FAST"
+                );
 
-                    pdf.addImage(
-                        renderedCards[cardIndex],
-                        "PNG",
-                        pos.x,
-                        pos.y,
-                        4.05,
-                        5.40,
-                        undefined,
-                        "FAST"
-                    );
+                pdf.setDrawColor(209, 216, 220);
+                pdf.setLineWidth(0.01);
+                pdf.rect(pos.x, pos.y, 4.05, 5.40);
+            }
+        } else {
+            const pageCount = Math.ceil(cards.length / 4);
 
-                    // Draw a crisp, subtle cut line around each touching card.
-                    pdf.setDrawColor(209, 216, 220);
-                    pdf.setLineWidth(0.01);
-                    pdf.rect(pos.x, pos.y, 4.05, 5.40);
+            // Keep identical pages adjacent so printed sheets can be stacked and cut
+            // without sorting individual menu cards afterward.
+            for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
+                for (let copyIndex = 0; copyIndex < copies; copyIndex++) {
+                    if (pageIndex > 0 || copyIndex > 0) {
+                        pdf.addPage();
+                    }
+
+                    const firstCardIndex = pageIndex * 4;
+                    const lastCardIndex = Math.min(firstCardIndex + 4, cards.length);
+
+                    for (let cardIndex = firstCardIndex; cardIndex < lastCardIndex; cardIndex++) {
+                        const pos = positions[cardIndex - firstCardIndex];
+
+                        pdf.addImage(
+                            renderedCards[cardIndex],
+                            "PNG",
+                            pos.x,
+                            pos.y,
+                            4.05,
+                            5.40,
+                            undefined,
+                            "FAST"
+                        );
+
+                        // Draw a crisp, subtle cut line around each touching card.
+                        pdf.setDrawColor(209, 216, 220);
+                        pdf.setLineWidth(0.01);
+                        pdf.rect(pos.x, pos.y, 4.05, 5.40);
+                    }
                 }
             }
         }
