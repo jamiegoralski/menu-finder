@@ -433,13 +433,6 @@ async function exportPDF() {
     });
     const preview = document.getElementById("previewCard");
     const copies = parseInt(document.getElementById("copyCount").value) || 1;
-    const exportCards = [];
-
-    cards.forEach((card, cardIndex) => {
-        for (let copyIndex = 0; copyIndex < copies; copyIndex++) {
-            exportCards.push({ card, cardIndex });
-        }
-    });
 
     const positions = [
         { x: 0.22, y: 0.12 },
@@ -489,27 +482,33 @@ async function exportPDF() {
             Building PDF…
         `;
 
-        for (let index = 0; index < exportCards.length; index++) {
-            const renderedCard = renderedCards[exportCards[index].cardIndex];
-            const pos = positions[index % 4];
+        for (let copyIndex = 0; copyIndex < copies; copyIndex++) {
+            for (let cardIndex = 0; cardIndex < cards.length; cardIndex++) {
+                if (cardIndex > 0 && cardIndex % 4 === 0) {
+                    pdf.addPage();
+                }
 
-            pdf.addImage(
-                renderedCard,
-                "PNG",
-                pos.x,
-                pos.y,
-                4.05,
-                5.40,
-                undefined,
-                "FAST"
-            );
+                const pos = positions[cardIndex % 4];
 
-            // Draw a crisp, subtle cut line around each touching card.
-            pdf.setDrawColor(209, 216, 220);
-            pdf.setLineWidth(0.01);
-            pdf.rect(pos.x, pos.y, 4.05, 5.40);
+                pdf.addImage(
+                    renderedCards[cardIndex],
+                    "PNG",
+                    pos.x,
+                    pos.y,
+                    4.05,
+                    5.40,
+                    undefined,
+                    "FAST"
+                );
 
-            if ((index + 1) % 4 === 0 && index < exportCards.length - 1) {
+                // Draw a crisp, subtle cut line around each touching card.
+                pdf.setDrawColor(209, 216, 220);
+                pdf.setLineWidth(0.01);
+                pdf.rect(pos.x, pos.y, 4.05, 5.40);
+            }
+
+            // Start every copy as a fresh, identical page set.
+            if (copyIndex < copies - 1) {
                 pdf.addPage();
             }
         }
