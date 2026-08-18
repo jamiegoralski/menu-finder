@@ -38,6 +38,7 @@ const descriptionInput =
 
 let currentCard = null;
 let currentIndex = 0;
+let sharedFontScale = 1;
 
 const lifestyleFields = [
 
@@ -339,59 +340,23 @@ function escapeCardText(value) {
 
 }
 
-function fitPreviewCard() {
+function buildPreviewMarkup(card) {
 
-    const face = document.querySelector("#previewCard .preview-bottom");
-    if (!face) return;
-
-    face.classList.remove("compact", "dense");
-
-    if (face.scrollHeight > face.clientHeight) {
-        face.classList.add("compact");
-    }
-
-    if (face.scrollHeight > face.clientHeight) {
-        face.classList.remove("compact");
-        face.classList.add("dense");
-    }
-
-}
-
-function updatePreview() {
-
-    const lifestyle = getLifestyleLabels(currentCard);
-    const allergens = getAllergenLabels(currentCard);
+    const lifestyle = getLifestyleLabels(card);
+    const allergens = getAllergenLabels(card);
     const detailRows = [
         lifestyle.length ? ["Lifestyle", lifestyle] : null,
         allergens.length ? ["Allergens", allergens] : null
     ].filter(Boolean);
 
-    document.getElementById("previewCard").innerHTML = `
-
+    return `
         <div class="preview-top"></div>
-
-        <div class="preview-bottom">
-
+        <div class="preview-bottom" style="--card-font-scale:${sharedFontScale}">
             <div class="preview-accent"></div>
-
-            <h2 class="preview-title">
-
-                ${escapeCardText(currentCard.Title)}
-
-            </h2>
-
-            ${
-                currentCard.MenuDescription
-                    ? `
-            <p class="preview-description">
-
-    ${escapeCardText(currentCard.MenuDescription)}
-
-</p>
-            `
-                    : ""
-            }
-
+            <h2 class="preview-title">${escapeCardText(card.Title)}</h2>
+            ${card.MenuDescription ? `
+            <p class="preview-description">${escapeCardText(card.MenuDescription)}</p>
+            ` : ""}
             ${detailRows.length ? `
             <div class="preview-details">
                 ${detailRows.map(([label, values]) => `
@@ -402,16 +367,46 @@ function updatePreview() {
                 `).join("")}
             </div>
             ` : ""}
-
-<div class="shared-facility-note">
-    Prepared in a Shared Facility with Allergens
-</div>
-
+            <div class="shared-facility-note">Prepared in a Shared Facility with Allergens</div>
         </div>
-
     `;
 
-    fitPreviewCard();
+}
+
+function previewFits() {
+
+    const face = document.querySelector("#previewCard .preview-bottom");
+    if (!face || face.scrollHeight > face.clientHeight + 1) return false;
+
+    return [...face.querySelectorAll(".preview-detail-value")]
+        .every(value => value.scrollWidth <= value.clientWidth + 1);
+
+}
+
+function calculateSharedFontScale() {
+
+    const preview = document.getElementById("previewCard");
+    if (!preview || !cards.length) return 1;
+
+    // Every card uses the largest single scale that fits the most text-heavy card.
+    for (let scale = 1; scale >= 0.7; scale -= 0.025) {
+        sharedFontScale = Number(scale.toFixed(3));
+        const allCardsFit = cards.every(card => {
+            preview.innerHTML = buildPreviewMarkup(card);
+            return previewFits();
+        });
+
+        if (allCardsFit) return sharedFontScale;
+    }
+
+    return 0.7;
+
+}
+
+function updatePreview() {
+
+    calculateSharedFontScale();
+    document.getElementById("previewCard").innerHTML = buildPreviewMarkup(currentCard);
 
 }
 
@@ -510,7 +505,7 @@ async function exportPDF() {
             );
 
             // Draw a crisp, subtle cut line around each touching card.
-            pdf.setDrawColor(112, 146, 162);
+            pdf.setDrawColor(209, 216, 220);
             pdf.setLineWidth(0.01);
             pdf.rect(pos.x, pos.y, 4.05, 5.40);
 

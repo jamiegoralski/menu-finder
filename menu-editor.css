@@ -383,7 +383,7 @@ textarea{
 
     background:white;
 
-    border:.75pt solid #7092a2;
+    border:.75pt solid #d1d8dc;
 
     display:grid;
 
@@ -397,7 +397,7 @@ textarea{
 
     width:100%;
 
-    border-bottom:.75pt dashed #9eb3bd;
+    border-bottom:.75pt dashed #d1d8dc;
 
 }
 
@@ -439,7 +439,7 @@ textarea{
 
     max-width:100%;
 
-    font-size:21px;
+    font-size:calc(23px * var(--card-font-scale, 1));
 
     font-weight:700;
 
@@ -449,13 +449,15 @@ textarea{
 
     text-wrap:balance;
 
+    overflow-wrap:anywhere;
+
 }
 
 .preview-description{
 
     margin:.08in 0 0;
 
-    font-size:12.5px;
+    font-size:calc(14.25px * var(--card-font-scale, 1));
 
     line-height:1.28;
 
@@ -471,7 +473,7 @@ textarea{
 
     display:grid;
 
-    gap:.08in;
+    gap:.09in;
 
     margin-top:.13in;
 
@@ -481,11 +483,11 @@ textarea{
 
     display:grid;
 
-    grid-template-columns:max-content minmax(0,1fr);
+    grid-template-columns:minmax(0,1fr);
 
-    align-items:baseline;
+    align-items:start;
 
-    gap:.08in;
+    gap:.018in;
 
 }
 
@@ -493,11 +495,11 @@ textarea{
 
     color:#00658f;
 
-    font-size:9.2px;
+    font-size:calc(10.5px * var(--card-font-scale, 1));
 
     font-weight:800;
 
-    letter-spacing:.7px;
+    letter-spacing:.6px;
 
     text-transform:uppercase;
 
@@ -507,7 +509,7 @@ textarea{
 
     color:#27363f;
 
-    font-size:11px;
+    font-size:calc(13px * var(--card-font-scale, 1));
 
     font-weight:600;
 
@@ -515,51 +517,10 @@ textarea{
 
     letter-spacing:.08px;
 
-    word-spacing:.65px;
+    word-spacing:.4px;
 
     white-space:nowrap;
 
-}
-
-.preview-bottom.compact .preview-title{
-    font-size:18px;
-    line-height:1.04;
-}
-
-.preview-bottom.compact .preview-description{
-    margin-top:.055in;
-    font-size:11.3px;
-    line-height:1.2;
-}
-
-.preview-bottom.compact .preview-details{
-    gap:.045in;
-    margin-top:.085in;
-}
-
-.preview-bottom.dense{
-    padding-top:.16in;
-    padding-bottom:.14in;
-}
-
-.preview-bottom.dense .preview-accent{
-    margin-bottom:.08in;
-}
-
-.preview-bottom.dense .preview-title{
-    font-size:16.5px;
-    line-height:1.02;
-}
-
-.preview-bottom.dense .preview-description{
-    margin-top:.04in;
-    font-size:10.2px;
-    line-height:1.14;
-}
-
-.preview-bottom.dense .preview-details{
-    gap:.025in;
-    margin-top:.055in;
 }
 
 /* ===========================
@@ -895,7 +856,7 @@ textarea{
 
     border-top:1px solid #d8d8d8;
 
-    font-size:8.4px;
+    font-size:calc(9.2px * var(--card-font-scale, 1));
 
     color:#5f6b73;
 
@@ -904,22 +865,6 @@ textarea{
     line-height:1.2;
 
     letter-spacing:.05px;
-
-}
-
-.preview-bottom.compact .shared-facility-note{
-
-    padding-top:.065in;
-
-    font-size:8px;
-
-}
-
-.preview-bottom.dense .shared-facility-note{
-
-    padding-top:.045in;
-
-    font-size:7.8px;
 
 }
 
