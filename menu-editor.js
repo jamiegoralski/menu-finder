@@ -482,34 +482,38 @@ async function exportPDF() {
             Building PDF…
         `;
 
-        for (let copyIndex = 0; copyIndex < copies; copyIndex++) {
-            for (let cardIndex = 0; cardIndex < cards.length; cardIndex++) {
-                if (cardIndex > 0 && cardIndex % 4 === 0) {
+        const pageCount = Math.ceil(cards.length / 4);
+
+        // Keep identical pages adjacent so printed sheets can be stacked and cut
+        // without sorting individual menu cards afterward.
+        for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
+            for (let copyIndex = 0; copyIndex < copies; copyIndex++) {
+                if (pageIndex > 0 || copyIndex > 0) {
                     pdf.addPage();
                 }
 
-                const pos = positions[cardIndex % 4];
+                const firstCardIndex = pageIndex * 4;
+                const lastCardIndex = Math.min(firstCardIndex + 4, cards.length);
 
-                pdf.addImage(
-                    renderedCards[cardIndex],
-                    "PNG",
-                    pos.x,
-                    pos.y,
-                    4.05,
-                    5.40,
-                    undefined,
-                    "FAST"
-                );
+                for (let cardIndex = firstCardIndex; cardIndex < lastCardIndex; cardIndex++) {
+                    const pos = positions[cardIndex - firstCardIndex];
 
-                // Draw a crisp, subtle cut line around each touching card.
-                pdf.setDrawColor(209, 216, 220);
-                pdf.setLineWidth(0.01);
-                pdf.rect(pos.x, pos.y, 4.05, 5.40);
-            }
+                    pdf.addImage(
+                        renderedCards[cardIndex],
+                        "PNG",
+                        pos.x,
+                        pos.y,
+                        4.05,
+                        5.40,
+                        undefined,
+                        "FAST"
+                    );
 
-            // Start every copy as a fresh, identical page set.
-            if (copyIndex < copies - 1) {
-                pdf.addPage();
+                    // Draw a crisp, subtle cut line around each touching card.
+                    pdf.setDrawColor(209, 216, 220);
+                    pdf.setLineWidth(0.01);
+                    pdf.rect(pos.x, pos.y, 4.05, 5.40);
+                }
             }
         }
 
