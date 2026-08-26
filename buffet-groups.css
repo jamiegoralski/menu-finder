@@ -784,6 +784,22 @@ header p{
 
     gap:14px;
 
+    width:100%;
+
+}
+
+.buffet-card-header > div{
+
+    flex:1;
+
+    min-width:0;
+
+}
+
+.buffet-card-header h3{
+
+    overflow-wrap:anywhere;
+
 }
 
 .delete-buffet{
@@ -815,6 +831,10 @@ header p{
     transition:.25s;
 
     flex-shrink:0;
+
+    min-width:38px;
+
+    padding:0;
 
 }
 
