@@ -997,3 +997,17 @@ header p{color:var(--studio-muted)}
     .secondary-btn{margin-top:10px}
     .library{max-height:460px}
 }
+
+/* Final phone safeguards. */
+@media(max-width:768px){
+    html,body{max-width:100%;overflow-x:hidden}
+    .container{width:100%;padding-inline:16px}
+    .site-nav{padding-inline:16px}
+    .site-brand,.site-nav-links a{display:inline-flex;align-items:center;min-height:44px}
+    .panel,.buffet-card,.menu-item,.library-item,.preview-card{width:100%;min-width:0}
+    .beo-actions{grid-template-columns:1fr}
+    .beo-actions>*{width:100%;min-height:48px}
+    .buffet-card *,.menu-item *,.library-item *,.preview-card *{overflow-wrap:anywhere}
+    .library-item button,.add-btn{width:44px;height:44px;min-width:44px;flex-basis:44px}
+    .remove-btn,.delete-buffet{min-width:44px;min-height:44px}
+}

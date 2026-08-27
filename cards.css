@@ -308,3 +308,15 @@ column-gap: .10in;
     font-weight: 500;
 
 }
+
+/* Screen preview stacks and scales; print dimensions remain unchanged. */
+@media screen and (max-width:768px){
+    body{padding:12px;overflow-x:hidden}
+    #cardContainer{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+    .table-card{width:min(4.05in,100%);height:auto;aspect-ratio:3 / 4}
+    .bottom-half{padding:clamp(12px,4vw,20px)}
+    .card-title{font-size:clamp(18px,6vw,24px);overflow-wrap:anywhere}
+    .card-description{font-size:clamp(11px,3.2vw,13px)}
+    .section-title{font-size:clamp(13px,4vw,15px)}
+    .badge{white-space:normal;text-align:center}
+}

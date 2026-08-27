@@ -1750,3 +1750,16 @@ body #closePopup{color:var(--studio-muted)}
     .menu-item{padding-top:20px}.card-actions{flex-wrap:wrap}.copy-card-btn{flex:1;justify-content:center}
     #cactusButton,#desertPopup{display:none!important}
 }
+
+/* Final phone safeguards. */
+@media(max-width:768px){
+    html,body{max-width:100%;overflow-x:hidden}
+    .container{width:100%;padding-inline:16px}
+    .site-nav{padding-inline:16px}
+    .site-nav-links{scrollbar-width:none}
+    .site-brand,.site-nav-links a{display:inline-flex;align-items:center;min-height:44px}
+    .page-header .download-btn{width:100%;min-width:0;min-height:52px;height:auto;padding:14px 18px}
+    #search{font-size:16px;padding:18px}
+    button,a,input{touch-action:manipulation}
+    .menu-item,.menu-item *{min-width:0;overflow-wrap:anywhere}
+}
